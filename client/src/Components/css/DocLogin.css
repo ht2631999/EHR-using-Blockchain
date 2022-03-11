@@ -1,0 +1,22 @@
+.form{
+    background-color: rgb(255, 0, 106);
+    height: 100%;
+    width: 100%;
+    top:20%;
+}
+
+.body{
+    background-image: url(../Images/doctors.jpg);
+}
+.button{
+    padding:5px;
+    margin:10px;
+}
+.label{
+    width: 200px;
+    
+}
+.label,input{
+    display: inline-block;
+    margin:2px;
+}
