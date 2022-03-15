@@ -14,7 +14,7 @@ class NavbarComp extends Component{
             <div bg="dark">
                 
               <Navbar bg="primary" variant="dark">
-                <Navbar.Brand href="#home">TEST PROJECT 1.3</Navbar.Brand>
+                <Navbar.Brand href="#home">TEST PROJECT 1.4</Navbar.Brand>
                 <Nav className="mr-auto">
                   {}
                 </Nav>
