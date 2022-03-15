@@ -18,7 +18,7 @@
   * "react-scripts": "3.2.0",
   * "web3": "1.2.2"
 
-* Install Metamask as Google Chrome extension.
+* Install Metamask as Browser extension.
 
 * Install Ganache for deployement of Contracts.
 
@@ -32,17 +32,5 @@
 
 Execution will start from __App.js__ file in client directory.
 
-## Project Slides
 
-https://docs.google.com/presentation/d/1OizR6slIn5KHgvNGpl9funr0OJHTKV811LbKO4bVFgY/edit?usp=sharing
-
-## Project Report
-
-https://docs.google.com/document/d/1cWPL7_XSQMM2ivSqIk6vxN7Z5dFcYBMFPsS0XiX4t54/edit?usp=sharing
-
-## Video Demonstration
-
-https://drive.google.com/file/d/1frHo7-kCf50wgQgpZMenyl5pVLntArHw/view?usp=sharing
-
-https://drive.google.com/open?id=1APvS9AwMbRx0sBlfNwNQ004jlKzy7nKd
 
