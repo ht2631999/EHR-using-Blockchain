@@ -254,5 +254,4 @@ contract optimized_healthCare {
     // emit doctorAddFile(doctors[msg.sender].name , msg.sender, "Added consultation file for patient", _pat, patients[_pat].name);
   }
 
-  
 }

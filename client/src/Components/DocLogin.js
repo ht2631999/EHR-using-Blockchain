@@ -6,9 +6,6 @@ class DocLogin extends Component{
   state={textvalue:"",formNum:false,age:0};
   cont = this.props.state.contract;
   Acc = this.props.state.accounts;
-
-  
-  
   
   async registerDoc(event)
       {
