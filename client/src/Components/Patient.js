@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {  Button, Input, Upload,Icon, message, Row, Col, Tag, Card, Collapse } from 'antd';
 
- import DisplayFiles from "./common/display_file";
+import DisplayFiles from "./common/display_file";
+import DisplayConsultation from "./common/displayConsultation";
+
 import ipfs from "./ipfs-util"
 import axios from "axios";
 const Panel = Collapse.Panel;
@@ -11,7 +13,10 @@ class Patient extends Component {
 
     constructor(props){
         super(props);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.getFile = this.getFile.bind(this);
     }
+
     contract =this.props.contract['OPT'];
     accounts =this.props.Acc;
 
@@ -27,6 +32,8 @@ class Patient extends Component {
         visible: false,
         loaded:false,
         buffer:null,
+        doctorConsultation:[],
+        
         file:null
     }
      updateFileHash = async (name,type,ipfshash) => {
@@ -48,6 +55,9 @@ class Patient extends Component {
         
         //if(!this.state.loaded)
             this.loadPatient();
+            
+            
+
         
         //this.fileProps.onChange.bind(this);
     }
@@ -68,12 +78,23 @@ class Patient extends Component {
         () => {
             //let  { files } = this.state;
             this.loadFiles();
+            this.loadDoctorConsultation();
             // this.getFileInfo("patient", files, "", (filesInfo) => {
             //     this.setState({filesInfo});
             // });
         });
         //this.loadFiles();
       
+    }
+
+    async loadDoctorConsultation(){
+        const data = await this.contract.methods.getDoctorConsultationForPatient().call({from:this.accounts[0]});
+        
+        if(data)
+            this.setState({doctorConsultation:data});
+
+        console.log('doctor consultation', this.state.doctorConsultation);
+            
     }
 
     async grantAccess(){
@@ -132,13 +153,13 @@ class Patient extends Component {
     }
 
     render() {
-        let { name, age, files, doctor_list } = this.state;
+        let { name, age, files, doctor_list, doctorConsultation } = this.state;
         // after loading patient's info html template will diplay along with files
-        this.uploadFile.bind(this);
-        this.getFile.bind(this);
+        
         //this.loadPatient();
         return (
             <div>
+                <div>
                 <Row gutter={16} style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
                     <Col className='col-3' span={6}>
                         <Card bordered={true} >
@@ -188,7 +209,8 @@ class Patient extends Component {
                                 }) 
                             }
                         </Panel>
-                        <Panel header="Doctors List" key="2">
+                        <h6>Doctor List</h6>
+                        <Panel key="2">
                             { 
                                 doctor_list.map((doctor) => {
                                     return <Tag>{doctor}</Tag>
@@ -198,6 +220,31 @@ class Patient extends Component {
                     </Collapse>
                 </Row>
             </div>
+            <div style={{height: "500px", overflowY: "scroll"}}>
+            <Collapse className='folderTab' defaultActiveKey={['1']}>
+                <h6>Doctor Consultation </h6>
+                <Panel   header={<Icon type="folder" />} key="2">
+                        { 
+                            doctorConsultation.map((doc,i) => {
+                                let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
+                                let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
+                                let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
+                                let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
+                                
+                                let consultProps = {doctor_id,consultation_advice, medicine, time_period};
+
+                                return <DisplayConsultation that={this} props={consultProps} />
+                            })
+                        }
+                    </Panel><Card bordered={true}>
+
+                </Card>
+                </Collapse>
+            </div>
+
+            </div>
+            
+
         );
     }
 }

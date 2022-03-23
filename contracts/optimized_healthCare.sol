@@ -267,4 +267,9 @@ contract optimized_healthCare {
   function getDoctorConsultation(address _pat)  public view checkPatient(_pat) checkDoctor(msg.sender) returns (doctorOfferedConsultation[] memory){
     return (doctorOfferedConsultationList[_pat]);
   }
+
+  
+  function getDoctorConsultationForPatient()  public view checkPatient(msg.sender) returns (doctorOfferedConsultation[] memory){
+    return (doctorOfferedConsultationList[msg.sender]);
+  }
 }

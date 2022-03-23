@@ -12,7 +12,6 @@ import axios from "axios";
 import { T } from 'antd/lib/upload/utils';
 const Panel = Collapse.Panel;
 
-var Web3 = require('web3');
 class DisplayPatient extends Component {
 
     constructor(props){
@@ -156,9 +155,9 @@ class DisplayPatient extends Component {
             <div style={{width:"100%"}}>
                 
                 <Card bordered={true} style={flexStyle}>
-                    <h4><b>Patient address:</b> {patient_address}</h4>
-                    <h4><b>Patient name:</b> {patient_name}</h4>
-                    <h4><b>Patient age:</b> {patient_age}</h4>
+                    <h5><b>Patient address:</b> {patient_address}</h5>
+                    <h5><b>Patient name:</b> {patient_name}</h5>
+                    <h5><b>Patient age:</b> {patient_age}</h5>
                 </Card>
                 <div style={{height: "500px", overflowY: "scroll"}}>
                 <Collapse className='folderTab' defaultActiveKey={['1']}>
@@ -227,66 +226,6 @@ class DisplayPatient extends Component {
                                     let consultProps = {doctor_id,consultation_advice, medicine, time_period};
 
                                     return <DisplayConsultation that={this} props={consultProps} />
-                                    // //creating div
-                                    // let new_div=document.createElement('div');
-                                    
-                                    // //adding doc id
-                                    // let doc_id_head= document.createElement('h6');
-                                    // doc_id_head.value= "Doctor ID";
-                                    // new_div.appendChild(doc_id_head);
-
-                                    // let doc_id_para=document.createElement('p');
-                                    // doc_id_para.value=`${doctor_id}`;
-                                    // new_div.appendChild(doc_id_para);
-
-                                    // //adding consultation_advice
-                                    // let consultation_head=document.createElement('h6');
-                                    // consultation_head.value= "Consultation";
-                                    // new_div.appendChild(consultation_head);
-
-                                    // let consultation_para=document.createElement('p');
-                                    // consultation_para.value=`${consultation_advice}`;
-                                    // new_div.appendChild(consultation_para);
-
-                                    // //adding medicine
-                                    // let medicine_head=document.createElement('h6');
-                                    // medicine_head.value= "Medicine";
-                                    // new_div.appendChild(medicine_head);
-
-                                    // let medicine_para=document.createElement('p');
-                                    // medicine_para.value=`${medicine}`;
-                                    // new_div.appendChild(medicine_para);
-
-                                    // //adding medicine
-                                    // let time_head=document.createElement('h6');
-                                    // time_head.value= "Time";
-                                    // new_div.appendChild(time_head);
-
-                                    // let time_para=document.createElement('p');
-                                    // time_para.value=`${time_period}`;
-                                    // new_div.appendChild(time_para);
-
-                                    // return new_div;
-                                    
-                                    // return (
-                                    //     <div>
-                                    //         <h6>Doctor ID</h6><br></br>
-                                    //         <p id='doc_id'></p>
-                                    //         <h6>Consultation</h6><br></br>
-                                    //         <p id='consultations'></p>
-                                    //         <h6>medicine</h6><br></br>
-                                    //         <p id='medicines'></p>
-                                    //         <h6>Time period</h6><br></br>
-                                    //         <p id='time'></p>
-                                    //         {/* <script>
-                                    //             document.getElementById('doc_id').innerHTML= `${doctor_id}`;
-                                    //             document.getElementById('consultations').innerHTML= `${consultation_advice}`;
-                                    //             document.getElementById('medicines').innerHTML= `${medicine}`;
-                                    //             document.getElementById('time').innerHTML= `${time_period}`;  
-                                    //         </script> */}
-                                            
-                                    //     </div>
-                                    // )
                                 })
                             }
                         </Panel><Card bordered={true}>
@@ -295,17 +234,18 @@ class DisplayPatient extends Component {
                     </Collapse>
                 </div>
 
-                <div>
+                <div style={{height: "500px", overflowY: "scroll"}}>
+                    <h6>Add consultation</h6>
                     <form onSubmit={this.addConsultation}>
-                            <label>Add consultation
+                            <label> Consultation
                                 <input type='text' id='consultation'/>
                             </label>
                             
-                            <label> Add medicine
+                            <label> Medicine
                             <input type="text" id='medicine'/>
                             </label>
                             
-                            <label> Time period
+                            <label> Period
                                 <input type="text" id='time_period'/>
                             </label>
                             <input type="submit" value="submit"/>

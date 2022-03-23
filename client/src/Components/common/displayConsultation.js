@@ -10,14 +10,14 @@ class displayConsultation extends Component{
     
     return(
         <div>
-            <Card>
-            <h6>Doctor ID</h6><br></br>
+            <Card bordered='true' color='blue'>
+            <h7><b>Doctor ID</b></h7><br></br>
             <p >{doctor_id}</p>
-            <h6>Consultation</h6><br></br>
+            <h7><b>Consultation</b></h7><br></br>
             <p >{consultation_advice}</p>
-            <h6>medicine</h6><br></br>
+            <h7><b>medicine</b></h7><br></br>
             <p >{medicine}</p>
-            <h6>Time period</h6><br></br>
+            <h7><b>Time period</b></h7><br></br>
             <p >{time_period}</p>
             </Card>
         </div>
