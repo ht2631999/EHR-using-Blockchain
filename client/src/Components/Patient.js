@@ -172,7 +172,9 @@ class Patient extends Component {
                             </div>
                         </Card>
                     </Col>
+                    
                     <Col className='col-3' span={6}>
+                    <h6>Grant Access</h6>
                         <Card bordered={true}>
                             <div style={flexStyle}>
                             <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Doctor Address"/>
@@ -182,7 +184,9 @@ class Patient extends Component {
                             </div>
                         </Card>
                     </Col>
+                    
                     <Col className='col-3' span={6}>
+                    <h6>Upload File</h6>
                         <Card bordered={true}>
                             <form onSubmit={this.uploadFile.bind(this)}>
                             {/* <Input className='emailId' style={{width:"100%"}} value={this.state.secret} onChange={this.onTextChange.bind(this, 'secret')} size="small" placeholder="One Time Secret"/> */}
@@ -193,8 +197,10 @@ class Patient extends Component {
                     </Col>
                 </Row>
                 <Row >
-                    <input type="button" onClick={this.loadFiles.bind(this) } value="See Files"></input>
+                    {/* <input type="button" onClick={this.loadFiles.bind(this) } value="Your Files"></input> */}
+                    
                     <Collapse className='folderTab' defaultActiveKey={['1']}>
+                    <h6>Your Files</h6>
                         <Panel   header={<Icon type="folder" />} key="1">
                             { 
                                 files.map((fhash, i) => {

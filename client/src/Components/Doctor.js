@@ -40,6 +40,7 @@ class Doctor extends Component {
                 </Card>
                 <Row gutter={16} style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
                     <Col className='col-sm-10' span={10}>
+                        <h6>Patient List</h6>
                         <Card bordered={true} style={flexStyle}>
                             { 
                                 patient_list.map((patient) => {
@@ -52,7 +53,7 @@ class Doctor extends Component {
                     <Col className='col-sm-6' span={6} style={{width: "58%"}}>
                         {
                             this.state.load_patient ?
-                            <div> <b>Patients List</b> <DisplayPatient contract ={this.healthRecord} Acc={this.Acc} patient_address={this.state.load_patient} /></div> :
+                            <div> <h6><b>Patients Data</b> <DisplayPatient contract ={this.healthRecord} Acc={this.Acc} patient_address={this.state.load_patient} /> </h6></div> :
                             <div></div>
                         }
                     </Col>

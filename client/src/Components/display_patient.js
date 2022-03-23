@@ -155,9 +155,9 @@ class DisplayPatient extends Component {
             <div style={{width:"100%"}}>
                 
                 <Card bordered={true} style={flexStyle}>
-                    <h5><b>Patient address:</b> {patient_address}</h5>
-                    <h5><b>Patient name:</b> {patient_name}</h5>
-                    <h5><b>Patient age:</b> {patient_age}</h5>
+                    <h6><b>Patient address:</b> {patient_address}</h6>
+                    <h6><b>Patient name:</b> {patient_name}</h6>
+                    <h6><b>Patient age:</b> {patient_age}</h6>
                 </Card>
                 <div style={{height: "500px", overflowY: "scroll"}}>
                 <Collapse className='folderTab' defaultActiveKey={['1']}>
@@ -234,22 +234,32 @@ class DisplayPatient extends Component {
                     </Collapse>
                 </div>
 
-                <div style={{height: "500px", overflowY: "scroll"}}>
+                <div >
                     <h6>Add consultation</h6>
+                    
                     <form onSubmit={this.addConsultation}>
-                            <label> Consultation
-                                <input type='text' id='consultation'/>
-                            </label>
+                        <table>
+                            <tr>
+                                <label> Consultation
+                                <td><input type='text' id='consultation'/></td>
+                                </label>
+                            </tr>
                             
+                            <tr>
                             <label> Medicine
-                            <input type="text" id='medicine'/>
+                            <td><input type="text" id='medicine'/></td>
                             </label>
-                            
-                            <label> Period
-                                <input type="text" id='time_period'/>
+                            </tr>
+
+                            <tr>
+                            <label> Time Period
+                            <td><input type="text" id='time_period'/></td>
                             </label>
+                            </tr>
                             <input type="submit" value="submit"/>
+                        </table>
                     </form>
+                    
                 </div>
             </div>
 
