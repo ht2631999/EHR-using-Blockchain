@@ -11,7 +11,7 @@ contract optimized_healthCare {
   mapping (bytes32 => filesInfo) private hashToFile; //filehash to file info
   mapping (address => mapping (bytes32 => uint)) private patientToFile; //files mapped to patients
   mapping (address => files[]) private patientFiles;
-
+  mapping (address => doctorOfferedConsultation[]) doctorOfferedConsultationList;
   
   //consultation files added by doctor to patient record
   mapping(address=> files[]) private doctorAddedPatientFiles; 
@@ -23,6 +23,8 @@ contract optimized_healthCare {
       string file_type;
       string file_hash;
   }
+
+  
   
   //File-info
   struct filesInfo {
@@ -38,17 +40,20 @@ contract optimized_healthCare {
       uint8 age;
       address id;
       bytes32[] files;// hashes of file that belong to this user for display purpose
-      bytes32[] doctorAddedFiles; 
+      // bytes32[] doctorAddedFiles; 
+
       //hashes of files that doctor added after consultation for display purpose 
       address[] doctor_list;
   }
   
-  //structure for doctor offered consultation
-  // struct doctorConsultation
-  // {
-  //   address doc_id;
-  //   string consultation;
-  // }
+  // structure for doctor offered consultation
+  struct doctorOfferedConsultation
+  {
+    address doc_id;
+    string consultation_advice;
+    string medicine;
+    string time_period;
+  }
 
   //structure of doctor info
   struct doctor {
@@ -125,8 +130,8 @@ contract optimized_healthCare {
      //Check if the patient already exists by address
      require(!(p.id > address(0x0)));
      //Add patient to blockchain
-     patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0), doctorAddedFiles: new bytes32[](0)});
-    //  patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
+    //  patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0), doctorAddedFiles: new bytes32[](0)});
+     patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
 
 
      emit patientSignUp( msg.sender, " has registered as Patient");
@@ -214,13 +219,13 @@ contract optimized_healthCare {
       return (p.name, p.age, p.id, patientFiles[pat]);
     }
   
-   function getDoctorAddedFiles(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
-      patient memory p = patients[pat];
+  //  function getDoctorAddedFiles(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
+  //     patient memory p = patients[pat];
 
-      //require(patientToDoctor[pat][msg.sender] > 0);
+  //     //require(patientToDoctor[pat][msg.sender] > 0);
 
-      return (p.name, p.age, p.id, doctorAddedPatientFiles[pat]);
-    }
+  //     return (p.name, p.age, p.id, doctorAddedPatientFiles[pat]);
+  //   }
   
   function getFileInfo(bytes32 fileHashId) private view checkFile(fileHashId) returns(filesInfo memory) {
       return hashToFile[fileHashId];
@@ -248,10 +253,18 @@ contract optimized_healthCare {
 
   // event doctorAddFile(string doctor_name, address doctor_address, string message, address patient_address, string patient_name);
 
-  function doctorAddConsultation(address _pat, string memory _file_name, string memory _file_type,string memory _file_hash) public checkDoctor(msg.sender)
+  // function doctorAddConsultation(address _pat, string memory _file_name, string memory _file_type,string memory _file_hash) public checkDoctor(msg.sender)
+  // {
+  //   doctorAddedPatientFiles[_pat].push(files({file_name:_file_name, file_type:_file_type,file_hash:_file_hash}));
+  //   // emit doctorAddFile(doctors[msg.sender].name , msg.sender, "Added consultation file for patient", _pat, patients[_pat].name);
+  // }
+
+  function addDoctorOfferedConsultation(address _pat, string memory _consultation, string memory _medicine, string  memory _time) public checkDoctor(msg.sender)
   {
-    doctorAddedPatientFiles[_pat].push(files({file_name:_file_name, file_type:_file_type,file_hash:_file_hash}));
-    // emit doctorAddFile(doctors[msg.sender].name , msg.sender, "Added consultation file for patient", _pat, patients[_pat].name);
+    doctorOfferedConsultationList[_pat].push(doctorOfferedConsultation({doc_id:msg.sender, consultation_advice:_consultation,medicine:_medicine,time_period:_time}));
   }
 
+  function getDoctorConsultation(address _pat)  public view checkPatient(_pat) checkDoctor(msg.sender) returns (doctorOfferedConsultation[] memory){
+    return (doctorOfferedConsultationList[_pat]);
+  }
 }
