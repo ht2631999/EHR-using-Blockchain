@@ -1,5 +1,14 @@
 # HealthCare Using Ethereum Blockchain
 
+## Project Objective
+This project is developed with the aim to store patient healthcare records over blockchain.
+The DApp build provides a patient centric system in which patient has control over his data i.e. patient themselves decide who can view their profiles/data. The system classifies the users into two: __Doctor__ and __Patient__. 
+
+Patient can grant or revoke data access permission to/from any doctor. Patients can also add files to their profile/data like reports, Xrays etc. which will be stored over IPFS. These files can help the doctors (who have been granted access) to review and treat patient accordingly. Also patients can view the past consultation records 
+
+Doctors are provided with facility to view the patient records to which they have access granted. Doctors can view their patients' files and can accordingly provide consultation and treatment.
+
+![](./client/src/Components/Images/doc-patient.jpg)
 
 ## To run this project Kindly install following requirements :
 
