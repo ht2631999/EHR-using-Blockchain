@@ -14,7 +14,7 @@ contract optimized_healthCare {
   mapping (address => doctorOfferedConsultation[]) doctorOfferedConsultationList;
   
   //consultation files added by doctor to patient record
-  mapping(address=> files[]) private doctorAddedPatientFiles; 
+  // mapping(address=> files[]) private doctorAddedPatientFiles; 
   
   
   //structure of patient file
@@ -119,7 +119,7 @@ contract optimized_healthCare {
   }
 
   //Event to emit when new patient registers
-  event patientSignUp( address _patient, string message);
+  // event patientSignUp( address _patient, string message);
 
   function signupPatient(string memory _name, uint8 _age) public {
      //search for patient on blockchain by address 
@@ -134,12 +134,12 @@ contract optimized_healthCare {
      patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
 
 
-     emit patientSignUp( msg.sender, " has registered as Patient");
+    //  emit patientSignUp( msg.sender, " has registered as Patient");
   }
   
 
   //Event to emit when new doctor registers
-  event doctorSignUp(address _doctor, string message);
+  // event doctorSignUp(address _doctor, string message);
 
   function signupDoctor(string memory _name) public {
       //search for doctor on blockchain
@@ -150,7 +150,7 @@ contract optimized_healthCare {
       require(!(d.id > address(0x0)));
       //Add the doctor to blockchain
       doctors[msg.sender] = doctor({name:_name,id:msg.sender,patient_list:new address[](0)});
-      emit doctorSignUp(msg.sender, " has registered as Doctor");
+      // emit doctorSignUp(msg.sender, " has registered as Doctor");
   }
 
 
@@ -170,6 +170,10 @@ contract optimized_healthCare {
       emit grantDoctorAccess( msg.sender , "Has granted access to the doctor below", d.name , doctor_id);
   }
 
+  function revokeAccessFromDoctor(address doctor_id) public checkPatient(msg.sender) checkDoctor(doctor_id) {
+    require(patientToDoctor[msg.sender][doctor_id] > 0);
+    patientToDoctor[msg.sender][doctor_id] = 0;
+  }
   
   //Event to emit when patient adds a file successfully
   event fileAdd(string patient_name, address patient_address, string message);
@@ -199,17 +203,17 @@ contract optimized_healthCare {
       return (d.name,d.id, d.patient_list);
   }
   
-  function checkProfile(address _user) public view onlyOwner returns(string memory, string memory){
-      patient memory p = patients[_user];
-      doctor memory d = doctors[_user];
+  // function checkProfile(address _user) public view onlyOwner returns(string memory, string memory){
+  //     patient memory p = patients[_user];
+  //     doctor memory d = doctors[_user];
       
-      if(p.id > address(0x0))
-          return (p.name, 'patient');
-      else if(d.id > address(0x0))
-          return (d.name, 'doctor');
-      else
-          return ('', '');
-    }
+  //     if(p.id > address(0x0))
+  //         return (p.name, 'patient');
+  //     else if(d.id > address(0x0))
+  //         return (d.name, 'doctor');
+  //     else
+  //         return ('', '');
+  //   }
   
   function getPatientInfoForDoctor(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
       patient memory p = patients[pat];

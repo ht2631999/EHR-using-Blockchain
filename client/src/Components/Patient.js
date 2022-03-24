@@ -106,6 +106,23 @@ class Patient extends Component {
             
             if(res) {
                 message.success('access successful');
+                console.log("access successful")
+                this.setState({doctorId:null});
+            }
+        }
+    }
+
+    
+    async revokeAccess(){
+        
+        
+        if(this.state.doctorId){
+            let res = await this.contract.methods.revokeAccessFromDoctor(this.state.doctorId)
+            .send({"from":this.accounts[0]});
+            
+            if(res) {
+                message.success('access revoked');
+                console.log("access revoked")
                 this.setState({doctorId:null});
             }
         }
@@ -184,7 +201,7 @@ class Patient extends Component {
                             </div>
                         </Card>
                     </Col>
-                    
+
                     <Col className='col-3' span={6}>
                     <h6>Upload File</h6>
                         <Card bordered={true}>
@@ -196,6 +213,19 @@ class Patient extends Component {
                         </Card>
                     </Col>
                 </Row>
+                <div>
+                
+                    <h6>Revoke Access</h6>
+                    <Card bordered={true}>
+                        <div style={flexStyle}>
+                        <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Doctor Address"/>
+                            <Button type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
+                                Revoke Access
+                            </Button>
+                        </div>
+                    </Card>
+            
+                </div>
                 <Row >
                     {/* <input type="button" onClick={this.loadFiles.bind(this) } value="Your Files"></input> */}
                     

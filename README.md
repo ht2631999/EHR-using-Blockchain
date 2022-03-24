@@ -10,7 +10,7 @@ Doctors are provided with facility to view the patient records to which they hav
 
 ![](./client/src/Components/Images/doc-patient.jpg)
 
-## To run this project Kindly install following requirements :
+## To run this project kindly install following prerequisites :
 
 * "Truffle" v5.1.20
     * solc: "0.5.16"
@@ -36,12 +36,15 @@ Doctors are provided with facility to view the patient records to which they hav
 2) Create new network in ___metamask___ with port number same as in ___truffle-config.js___
 3) Configure Ganache with same port number.
 4) Goto Project Directory and run ___"truffle migrate"___ on command prompt.
-5) Goto Client directory using prompt and use ___"npm install"___ or ___"yarn install"___ (if your system has yarn).
+5) Goto 'Client' directory using prompt and use ___"npm install"___ or ___"yarn install"___ (if your system has yarn).
 6) run ___"npm start"___ to start react server.
 7) Project will be open in your browser.
 8) Import Ganache account(s) in metamask and use it for user login/register purpose.
 
 Execution will start from __App.js__ file in client directory.
 
-
+## TO-DO 
+1) Add events to smart contracts for each function for better interactive environment.
+2) Improve UI design.
+3) Fix 'Revoke Access' functionality for patients.
 
