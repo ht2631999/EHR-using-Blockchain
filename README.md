@@ -46,5 +46,5 @@ Execution will start from __App.js__ file in client directory.
 ## TO-DO 
 1) Add events to smart contracts for each function for better interactive environment.
 2) Improve UI design.
-3) Fix 'Revoke Access' functionality for patients.
+
 

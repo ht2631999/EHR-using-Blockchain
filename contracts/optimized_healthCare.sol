@@ -173,6 +173,46 @@ contract optimized_healthCare {
   function revokeAccessFromDoctor(address doctor_id) public checkPatient(msg.sender) checkDoctor(doctor_id) {
     require(patientToDoctor[msg.sender][doctor_id] > 0);
     patientToDoctor[msg.sender][doctor_id] = 0;
+
+
+    patient storage p = patients[msg.sender];
+    doctor storage d = doctors[doctor_id];
+
+    uint pdlength= p.doctor_list.length;
+    uint pos=0;
+
+    for (uint i = 0; i < pdlength; i++) {
+      if(p.doctor_list[i] == doctor_id)
+      {
+        pos=i;
+        break;
+      }
+    }
+
+    for(;pos<pdlength-1;pos++)
+    {
+      p.doctor_list[pos]= p.doctor_list[pos+1];
+    }
+
+    p.doctor_list.pop();
+
+    pdlength= d.patient_list.length;
+    pos=0;
+
+    for (uint i = 0; i < pdlength; i++) {
+      if(d.patient_list[i] == msg.sender)
+      {
+        pos=i;
+        break;
+      }
+    }
+
+    for(;pos<pdlength-1;pos++)
+    {
+      d.patient_list[pos]= d.patient_list[pos+1];
+    }
+
+    d.patient_list.pop();
   }
   
   //Event to emit when patient adds a file successfully
