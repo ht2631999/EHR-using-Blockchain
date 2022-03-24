@@ -8,14 +8,10 @@ contract optimized_healthCare {
   
   mapping (address => patient) private patients; //mapping patients to their addresses
   mapping (address => mapping (address => uint)) private patientToDoctor; //patients and list of doctors allowed access to
-  // mapping (bytes32 => filesInfo) private hashToFile; //filehash to file info
   mapping (address => mapping (bytes32 => uint)) private patientToFile; //files mapped to patients
   mapping (address => files[]) private patientFiles;
   mapping (address => doctorOfferedConsultation[]) doctorOfferedConsultationList;
-  
-  //consultation files added by doctor to patient record
-  // mapping(address=> files[]) private doctorAddedPatientFiles; 
-  
+
   
   //structure of patient file
   struct files{
@@ -40,7 +36,6 @@ contract optimized_healthCare {
       uint8 age;
       address id;
       bytes32[] files;// hashes of file that belong to this user for display purpose
-      // bytes32[] doctorAddedFiles; 
 
       //hashes of files that doctor added after consultation for display purpose 
       address[] doctor_list;
@@ -112,29 +107,23 @@ contract optimized_healthCare {
   }
   
 
-  // modifier checkFile(bytes32 fileHashId) {
-  //   bytes memory tempString = bytes(hashToFile[fileHashId].file_name);
-  //   require(tempString.length > 0);//check if file exist
-  //   _;
-  // }
 
   //Event to emit when new patient registers
   // event patientSignUp( address _patient, string message);
 
   function signupPatient(string memory _name, uint8 _age) public {
-     //search for patient on blockchain by address 
-     patient storage p = patients[msg.sender];
-     //check input name and age
-     require(keccak256(abi.encodePacked(_name)) != keccak256(""));
-     require((_age > 0) && (_age < 100));
-     //Check if the patient already exists by address
-     require(!(p.id > address(0x0)));
-     //Add patient to blockchain
-    //  patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0), doctorAddedFiles: new bytes32[](0)});
-     patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
 
-
+    //search for patient on blockchain by address 
+    patient storage p = patients[msg.sender];
+    //check input name and age
+    require(keccak256(abi.encodePacked(_name)) != keccak256(""));
+    require((_age > 0) && (_age < 100));
+    //Check if the patient already exists by address
+    require(!(p.id > address(0x0)));
+    //Add patient to blockchain
+    patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
     //  emit patientSignUp( msg.sender, " has registered as Patient");
+
   }
   
 
@@ -243,17 +232,7 @@ contract optimized_healthCare {
       return (d.name,d.id, d.patient_list);
   }
   
-  // function checkProfile(address _user) public view onlyOwner returns(string memory, string memory){
-  //     patient memory p = patients[_user];
-  //     doctor memory d = doctors[_user];
-      
-  //     if(p.id > address(0x0))
-  //         return (p.name, 'patient');
-  //     else if(d.id > address(0x0))
-  //         return (d.name, 'doctor');
-  //     else
-  //         return ('', '');
-  //   }
+  
   
   function getPatientInfoForDoctor(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
       patient memory p = patients[pat];
@@ -262,46 +241,6 @@ contract optimized_healthCare {
 
       return (p.name, p.age, p.id, patientFiles[pat]);
     }
-  
-  //  function getDoctorAddedFiles(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
-  //     patient memory p = patients[pat];
-
-  //     //require(patientToDoctor[pat][msg.sender] > 0);
-
-  //     return (p.name, p.age, p.id, doctorAddedPatientFiles[pat]);
-  //   }
-  
-  // function getFileInfo(bytes32 fileHashId) private view checkFile(fileHashId) returns(filesInfo memory) {
-  //     return hashToFile[fileHashId];
-  //   }
-  
-  // // function getFileSecret(bytes32 fileHashId, string memory role, address id, address pat) public view 
-  // // checkFile(fileHashId) checkFileAccess(role, id, fileHashId, pat)
-  // // returns(string memory) {
-  // //     filesInfo memory f = getFileInfo(fileHashId);
-  // //     return (f.file_secret);
-  // //   }
-
-  // function getFileInfoDoctor(address doc, address pat, bytes32 fileHashId) public view 
-  // onlyOwner checkPatient(pat) checkDoctor(doc) checkFileAccess("doctor", doc, fileHashId, pat)
-  // returns(string memory, string memory) {
-  //     filesInfo memory f = getFileInfo(fileHashId);
-  //     return (f.file_name, f.file_type);
-  //   }
-  
-  // function getFileInfoPatient(address pat, bytes32 fileHashId) public view 
-  // onlyOwner checkPatient(pat) checkFileAccess("patient", pat, fileHashId, pat) returns(string memory, string memory) {
-  //     filesInfo memory f = getFileInfo(fileHashId);
-  //     return (f.file_name, f.file_type);
-  //   }
-
-  // event doctorAddFile(string doctor_name, address doctor_address, string message, address patient_address, string patient_name);
-
-  // function doctorAddConsultation(address _pat, string memory _file_name, string memory _file_type,string memory _file_hash) public checkDoctor(msg.sender)
-  // {
-  //   doctorAddedPatientFiles[_pat].push(files({file_name:_file_name, file_type:_file_type,file_hash:_file_hash}));
-  //   // emit doctorAddFile(doctors[msg.sender].name , msg.sender, "Added consultation file for patient", _pat, patients[_pat].name);
-  // }
 
   function addDoctorOfferedConsultation(address _pat, string memory _consultation, string memory _medicine, string  memory _time) public checkDoctor(msg.sender)
   {

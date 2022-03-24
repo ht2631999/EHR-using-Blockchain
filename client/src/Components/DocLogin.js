@@ -64,9 +64,6 @@ class DocLogin extends Component{
       this.checkDoc = this.checkDoc.bind(this);
       this.registerPat = this.registerPat.bind(this);
       this.checkPat = this.checkPat.bind(this);
-      //this.handleChange = this.handleChange.bind(this);
-      // this.alterformD = this.alterformD.bind(this);
-      // this.alterformP = this.alterformP.bind(this);
 
       const docForm = <form>
        <legend>  <div className="formName"> <h5>Doctor</h5></div></legend> 

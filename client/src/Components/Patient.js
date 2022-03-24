@@ -51,15 +51,9 @@ class Patient extends Component {
     }
     
       
-    componentDidMount(){
+    componentDidMount(){ 
         
-        //if(!this.state.loaded)
-            this.loadPatient();
-            
-            
-
-        
-        //this.fileProps.onChange.bind(this);
+        this.loadPatient();     
     }
 
 
@@ -71,19 +65,14 @@ class Patient extends Component {
 
     }
     async loadPatient (){
-        //console.log(contract);  
         let res = await this.contract.methods.getPatientInfo().call({from :this.accounts[0]});
 
         this.setState({name:res[0],age:res[2],files:res[3],doctor_list:res[4]},
         () => {
-            //let  { files } = this.state;
             this.loadFiles();
             this.loadDoctorConsultation();
-            // this.getFileInfo("patient", files, "", (filesInfo) => {
-            //     this.setState({filesInfo});
-            // });
+        
         });
-        //this.loadFiles();
       
     }
 
@@ -171,9 +160,7 @@ class Patient extends Component {
 
     render() {
         let { name, age, files, doctor_list, doctorConsultation } = this.state;
-        // after loading patient's info html template will diplay along with files
         
-        //this.loadPatient();
         return (
             <div>
                 <div>
@@ -206,7 +193,6 @@ class Patient extends Component {
                     <h6>Upload File</h6>
                         <Card bordered={true}>
                             <form onSubmit={this.uploadFile.bind(this)}>
-                            {/* <Input className='emailId' style={{width:"100%"}} value={this.state.secret} onChange={this.onTextChange.bind(this, 'secret')} size="small" placeholder="One Time Secret"/> */}
                             <input type="file" onChange={this.getFile.bind(this)}></input>
                             <input type="submit"></input>
                             </form>
@@ -227,7 +213,6 @@ class Patient extends Component {
             
                 </div>
                 <Row >
-                    {/* <input type="button" onClick={this.loadFiles.bind(this) } value="Your Files"></input> */}
                     
                     <Collapse className='folderTab' defaultActiveKey={['1']}>
                     <h6>Your Files</h6>
@@ -235,10 +220,8 @@ class Patient extends Component {
                             { 
                                 files.map((fhash, i) => {
                                     let filename = this.state.files[i]?this.state.files[i][0]:null;
-                                    //let diplayImage = "/ipfs_file?hash="+fhash+"&file_name="+filename;
+                                    
                                     let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                    // "&role=patient&token="+token+"&patient_address="+web3.eth.accounts[0];
-                                    //let diplayImage=null;
                                     let fileProps = {fhash, filename, diplayImage, i};
                                     
                                     return <DisplayFiles that={this} props={fileProps}/>
