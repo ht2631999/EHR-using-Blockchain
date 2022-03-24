@@ -8,7 +8,7 @@ contract optimized_healthCare {
   
   mapping (address => patient) private patients; //mapping patients to their addresses
   mapping (address => mapping (address => uint)) private patientToDoctor; //patients and list of doctors allowed access to
-  mapping (bytes32 => filesInfo) private hashToFile; //filehash to file info
+  // mapping (bytes32 => filesInfo) private hashToFile; //filehash to file info
   mapping (address => mapping (bytes32 => uint)) private patientToFile; //files mapped to patients
   mapping (address => files[]) private patientFiles;
   mapping (address => doctorOfferedConsultation[]) doctorOfferedConsultationList;
@@ -112,11 +112,11 @@ contract optimized_healthCare {
   }
   
 
-  modifier checkFile(bytes32 fileHashId) {
-    bytes memory tempString = bytes(hashToFile[fileHashId].file_name);
-    require(tempString.length > 0);//check if file exist
-    _;
-  }
+  // modifier checkFile(bytes32 fileHashId) {
+  //   bytes memory tempString = bytes(hashToFile[fileHashId].file_name);
+  //   require(tempString.length > 0);//check if file exist
+  //   _;
+  // }
 
   //Event to emit when new patient registers
   // event patientSignUp( address _patient, string message);
@@ -167,7 +167,7 @@ contract optimized_healthCare {
       patientToDoctor[msg.sender][doctor_id] = pos;
       d.patient_list.push(msg.sender);
 
-      emit grantDoctorAccess( msg.sender , "Has granted access to the doctor below", d.name , doctor_id);
+      emit grantDoctorAccess( msg.sender , "Has granted access to a doctor", d.name , doctor_id);
   }
 
   function revokeAccessFromDoctor(address doctor_id) public checkPatient(msg.sender) checkDoctor(doctor_id) {
@@ -231,29 +231,29 @@ contract optimized_healthCare {
   //     return (p.name, p.age, p.id, doctorAddedPatientFiles[pat]);
   //   }
   
-  function getFileInfo(bytes32 fileHashId) private view checkFile(fileHashId) returns(filesInfo memory) {
-      return hashToFile[fileHashId];
-    }
-  
-  // function getFileSecret(bytes32 fileHashId, string memory role, address id, address pat) public view 
-  // checkFile(fileHashId) checkFileAccess(role, id, fileHashId, pat)
-  // returns(string memory) {
-  //     filesInfo memory f = getFileInfo(fileHashId);
-  //     return (f.file_secret);
+  // function getFileInfo(bytes32 fileHashId) private view checkFile(fileHashId) returns(filesInfo memory) {
+  //     return hashToFile[fileHashId];
   //   }
-
-  function getFileInfoDoctor(address doc, address pat, bytes32 fileHashId) public view 
-  onlyOwner checkPatient(pat) checkDoctor(doc) checkFileAccess("doctor", doc, fileHashId, pat)
-  returns(string memory, string memory) {
-      filesInfo memory f = getFileInfo(fileHashId);
-      return (f.file_name, f.file_type);
-    }
   
-  function getFileInfoPatient(address pat, bytes32 fileHashId) public view 
-  onlyOwner checkPatient(pat) checkFileAccess("patient", pat, fileHashId, pat) returns(string memory, string memory) {
-      filesInfo memory f = getFileInfo(fileHashId);
-      return (f.file_name, f.file_type);
-    }
+  // // function getFileSecret(bytes32 fileHashId, string memory role, address id, address pat) public view 
+  // // checkFile(fileHashId) checkFileAccess(role, id, fileHashId, pat)
+  // // returns(string memory) {
+  // //     filesInfo memory f = getFileInfo(fileHashId);
+  // //     return (f.file_secret);
+  // //   }
+
+  // function getFileInfoDoctor(address doc, address pat, bytes32 fileHashId) public view 
+  // onlyOwner checkPatient(pat) checkDoctor(doc) checkFileAccess("doctor", doc, fileHashId, pat)
+  // returns(string memory, string memory) {
+  //     filesInfo memory f = getFileInfo(fileHashId);
+  //     return (f.file_name, f.file_type);
+  //   }
+  
+  // function getFileInfoPatient(address pat, bytes32 fileHashId) public view 
+  // onlyOwner checkPatient(pat) checkFileAccess("patient", pat, fileHashId, pat) returns(string memory, string memory) {
+  //     filesInfo memory f = getFileInfo(fileHashId);
+  //     return (f.file_name, f.file_type);
+  //   }
 
   // event doctorAddFile(string doctor_name, address doctor_address, string message, address patient_address, string patient_name);
 
