@@ -44,7 +44,6 @@ Doctors are provided with facility to view the patient records to which they hav
 Execution will start from __App.js__ file in client directory.
 
 ## TO-DO 
-1) Add events to smart contracts for each function for better interactive environment.
-2) Improve UI design.
+1) Improve UI design.
 
 
