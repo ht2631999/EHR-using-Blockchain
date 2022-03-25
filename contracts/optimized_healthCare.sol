@@ -109,10 +109,11 @@ contract optimized_healthCare {
 
 
   //Event to emit when new patient registers
-  // event patientSignUp( address _patient, string message);
+  event patientSignUp( address _patient, string message, uint256 gas_used);
 
   function signupPatient(string memory _name, uint8 _age) public {
 
+    uint256 startGas = gasleft();
     //search for patient on blockchain by address 
     patient storage p = patients[msg.sender];
     //check input name and age
@@ -122,15 +123,20 @@ contract optimized_healthCare {
     require(!(p.id > address(0x0)));
     //Add patient to blockchain
     patients[msg.sender] = patient({name:_name,age:_age,id:msg.sender,files:new bytes32[](0),doctor_list:new address[](0)});
-    //  emit patientSignUp( msg.sender, " has registered as Patient");
+    
+    uint256 endGas = gasleft();
+    uint256 gas_used= startGas-endGas;
 
+    emit patientSignUp( msg.sender, "Registered as Patient", gas_used);
   }
   
 
   //Event to emit when new doctor registers
-  // event doctorSignUp(address _doctor, string message);
+  event doctorSignUp(address _doctor, string message, uint256 gas_used);
 
   function signupDoctor(string memory _name) public {
+
+      uint256 startGas = gasleft();
       //search for doctor on blockchain
       doctor storage d = doctors[msg.sender];
       //check name of doctor
@@ -139,14 +145,17 @@ contract optimized_healthCare {
       require(!(d.id > address(0x0)));
       //Add the doctor to blockchain
       doctors[msg.sender] = doctor({name:_name,id:msg.sender,patient_list:new address[](0)});
-      // emit doctorSignUp(msg.sender, " has registered as Doctor");
+      uint256 endGas = gasleft();
+      uint256 gas_used = startGas-endGas;
+      emit doctorSignUp(msg.sender, "Registered as Doctor",gas_used);
   }
 
 
   //Event to emit when patient grants access to doctor
-  event grantDoctorAccess( address patient_address, string message, string _doctor, address doctor_address);
+  event grantDoctorAccess( address patient_address, string message, string _doctor, address doctor_address, uint256 gas_used);
   
   function grantAccessToDoctor(address doctor_id) public checkPatient(msg.sender) checkDoctor(doctor_id) {
+      uint256 startGas = gasleft();
       patient storage p = patients[msg.sender];
       doctor storage d = doctors[doctor_id];
       require(patientToDoctor[msg.sender][doctor_id] < 1);// this means doctor already been access
@@ -156,10 +165,16 @@ contract optimized_healthCare {
       patientToDoctor[msg.sender][doctor_id] = pos;
       d.patient_list.push(msg.sender);
 
-      emit grantDoctorAccess( msg.sender , "Has granted access to a doctor", d.name , doctor_id);
+      uint256 endGas = gasleft();
+      uint256 gas_used = startGas-endGas;
+      emit grantDoctorAccess( msg.sender , "Granted access to doctor", d.name , doctor_id, gas_used);
   }
 
+  //Event to emit when patient revokes a doctor's access
+  event revokeDoctorAccess(address patient_address, string message, string _doctor, address doctor_address,uint256 gas_used);
+
   function revokeAccessFromDoctor(address doctor_id) public checkPatient(msg.sender) checkDoctor(doctor_id) {
+    uint256 startGas = gasleft();
     require(patientToDoctor[msg.sender][doctor_id] > 0);
     patientToDoctor[msg.sender][doctor_id] = 0;
 
@@ -202,15 +217,23 @@ contract optimized_healthCare {
     }
 
     d.patient_list.pop();
+    uint256 endGas = gasleft();
+    uint256 gas_used = startGas-endGas;
+
+    emit revokeDoctorAccess(msg.sender, "Revoked access of doctor", d.name, doctor_id, gas_used);
   }
   
   //Event to emit when patient adds a file successfully
-  event fileAdd(string patient_name, address patient_address, string message);
+  event fileAdd(string patient_name, address patient_address, string message, uint256 gas_used);
 
   function addUserFiles(string memory _file_name, string memory _file_type,string memory _file_hash) public checkPatient(msg.sender){
+    uint256 startGas = gasleft();  
+
+    patientFiles[msg.sender].push(files({file_name:_file_name, file_type:_file_type,file_hash:_file_hash}));
       
-      patientFiles[msg.sender].push(files({file_name:_file_name, file_type:_file_type,file_hash:_file_hash}));
-      emit fileAdd(patients[msg.sender].name , msg.sender, "Added a file");
+    uint256 endGas = gasleft();
+    uint256 gas_used = startGas-endGas;
+    emit fileAdd(patients[msg.sender].name , msg.sender, "Added a file",gas_used);
   }
 
 
@@ -242,9 +265,16 @@ contract optimized_healthCare {
       return (p.name, p.age, p.id, patientFiles[pat]);
     }
 
+  event doctorOfferConsultation(address _doctor, string message, address _patient, string _consultation, string _medicine, uint256 gas_used);
+
   function addDoctorOfferedConsultation(address _pat, string memory _consultation, string memory _medicine, string  memory _time) public checkDoctor(msg.sender)
   {
+    uint256 startGas = gasleft();
     doctorOfferedConsultationList[_pat].push(doctorOfferedConsultation({doc_id:msg.sender, consultation_advice:_consultation,medicine:_medicine,time_period:_time}));
+    
+    uint256 endGas = gasleft();
+    uint256 gas_used = startGas-endGas;
+    emit doctorOfferConsultation(msg.sender, "Provided consultation to", _pat, _consultation, _medicine, gas_used);
   }
 
   function getDoctorConsultation(address _pat)  public view checkPatient(_pat) checkDoctor(msg.sender) returns (doctorOfferedConsultation[] memory){
