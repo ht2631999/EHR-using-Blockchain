@@ -3,11 +3,9 @@ import React, { Component, createElement } from 'react';
 import {  Icon, Card,Collapse } from 'antd';
 
 
-import PopUp from "./common/popup";
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
-
-import ipfs from './ipfs-util';
+import './css/doctor.css'
 import axios from "axios";
 import { T } from 'antd/lib/upload/utils';
 const Panel = Collapse.Panel;
@@ -97,14 +95,14 @@ class DisplayPatient extends Component {
         
 
         return(
-            <div style={{width:"100%"}}>
+            <div className='doctorbody' style={{width:"100%"}}>
                 
                 <Card bordered={true} style={flexStyle}>
                     <h6><b>Patient address:</b> {patient_address}</h6>
                     <h6><b>Patient name:</b> {patient_name}</h6>
                     <h6><b>Patient age:</b> {patient_age}</h6>
                 </Card>
-                <div style={{height: "500px", overflowY: "scroll"}}>
+                <div style={{height: "250px", overflowY: "scroll"}}>
                 <Collapse className='folderTab' defaultActiveKey={['1']}>
                 <h5>Patient Files</h5>
                         <Panel   header={<Icon type="folder" />} key="1">
@@ -125,7 +123,7 @@ class DisplayPatient extends Component {
                     </Collapse>
                 </div>
                 
-                <div style={{height: "500px", overflowY: "scroll"}}>
+                <div style={{height: "250px", overflowY: "scroll"}}>
                 <Collapse className='folderTab' defaultActiveKey={['1']}>
                     <h5>Doctor Consultation </h5>
                     <Panel   header={<Icon type="folder" />} key="2">

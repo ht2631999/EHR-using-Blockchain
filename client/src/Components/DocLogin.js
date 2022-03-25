@@ -54,7 +54,7 @@ class DocLogin extends Component{
         }
         catch(err)
         {
-          alert('Account Does Not Exist. Kindly Register'+err);
+          alert('Account Does Not Exist. Kindly Register');
         }
 
       }
@@ -65,33 +65,57 @@ class DocLogin extends Component{
       this.registerPat = this.registerPat.bind(this);
       this.checkPat = this.checkPat.bind(this);
 
-      const docForm = <form>
-       <legend>  <div className="formName"> <h5>Doctor</h5></div></legend> 
-        <div className="label">  <b>Enter Name</b></div>
-      <input type="text" name="name" onChange={(event)=>{
-        this.setState({textvalue:event.target.value});
-      }} ></input>
-      <br></br>
-      <Button variant="dark" className="button" onClick={this.registerDoc}>Register Doctor</Button>
-      <Button variant="dark"  className="button" onClick={this.checkDoc}>Login By Address</Button>
+      const docForm = 
+      <form>
+        <fieldset>
+          <legend>  
+            <div className="formName" > <h5>Doctor</h5></div>
+          </legend> 
+          <div className="label">  
+            <b>Enter Name</b>
+          </div>
+          <input type="text" name="name" onChange={(event)=>
+            {this.setState({textvalue:event.target.value}); }} >
+          </input>
+          <br></br>
+          <Button variant="dark" className="button" onClick={this.registerDoc}>Register Doctor</Button>
+          <Button variant="dark"  className="button" onClick={this.checkDoc}>Login By Address</Button>
+        </fieldset>
     </form>;
       
-      const patForm=<form>
-               <legend><div className="formName"><h5>Patient</h5></div></legend> 
+      const patForm=
+      <form>
+      <fieldset>
+        <legend>
+          <div className="formName">
+            <h5>Patient
+            </h5>
+          </div>
+        </legend> 
+        
+        <div className="label">
+          <b>Enter Name
+          </b>
+        </div>
+        
+        <input type="text" name="name" onChange={(event)=>
+        {
+          this.setState({textvalue:event.target.value});
+        }} />
 
-      <div className="label"><b>Enter Name</b></div>
-      <input type="text" name="name" onChange={(event)=>{
-        this.setState({textvalue:event.target.value});
-      }} />
-      <br/>
-      <div className="label"><b>Age</b></div>
-      
-      <input type="text" name="age" onChange={(event)=>{
-        this.setState({age:event.target.value});
-      }}></input>
-      <br></br>
-      <Button className="button" variant="dark" onClick={this.registerPat.bind(this)}>Register Patient</Button>
-      <Button className="button" variant="dark"  onClick={this.checkPat.bind(this)}>Login By Address</Button>
+        <br></br>
+        
+        <div className="label">
+          <b>Age</b>
+        </div>
+        
+        <input type="text" name="age" onChange={(event)=>{
+          this.setState({age:event.target.value});
+        }}></input>
+        <br></br>
+        <Button className="button" variant="dark" onClick={this.registerPat.bind(this)}>Register Patient</Button>
+        <Button className="button" variant="dark"  onClick={this.checkPat.bind(this)}>Login By Address</Button>
+      </fieldset>
     </form>;
       const fNum = this.state.formNum;
       let loadForm;
@@ -101,18 +125,19 @@ class DocLogin extends Component{
         loadForm =docForm;
         return(
             
-          <div className="form">
+          <div className="dlbody" >
             
             <div className="alterBut">
-              <Button className="button" variant="primary" value="0" onClick={(event)=>this.setState({formNum:false})}>Doctor</Button>
+              <Button className="dbutton" variant="primary" value="0" onClick={(event)=>this.setState({formNum:false})}>Doctor</Button>
             
-             <Button className="button" variant="success"  value="1" onClick={(event)=>this.setState({formNum:true})}>Patient</Button>
+             <Button className="pbutton" variant="success"  value="1" onClick={(event)=>this.setState({formNum:true})}>Patient</Button>
              </div>
 
              <fieldset>
                
                 {loadForm}
-                </fieldset>
+              </fieldset>
+
              </div>
             );
     }

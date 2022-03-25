@@ -1,16 +1,37 @@
-.form{
-    background-color: rgb(255, 0, 106);
+.dlbody{
+    /* background-color: rgb(255, 0, 106); */
+    background-image: url(../Images/doctors.jpg);
+    /* Full height */
     height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 30%;
     width: 100%;
-    top:20%;
+    top:50%;
 }
 
-.body{
-    background-image: url(../Images/doctors.jpg);
+.form{
+    padding-top: 10%;
 }
+
+
 .button{
     padding:5px;
     margin:10px;
+}
+
+.dbutton{
+    padding:5px;
+    margin:10px;
+    background-color: teal;
+}
+.pbutton{
+    padding:5px;
+    margin:10px;
+    background-color: rgb(35, 96, 153);
 }
 .label{
     width: 200px;

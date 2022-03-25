@@ -3,6 +3,7 @@ import {  Button, Input, Upload,Icon, message, Row, Col, Tag, Card, Collapse } f
 
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
+import './css/patient.css'
 
 import ipfs from "./ipfs-util"
 import axios from "axios";
@@ -162,8 +163,8 @@ class Patient extends Component {
         let { name, age, files, doctor_list, doctorConsultation } = this.state;
         
         return (
-            <div>
-                <div>
+            <div className='pbody' >
+                <div >
                 <Row gutter={16} style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
                     <Col className='col-3' span={6}>
                         <Card bordered={true} >
@@ -181,7 +182,7 @@ class Patient extends Component {
                     <h6>Grant Access</h6>
                         <Card bordered={true}>
                             <div style={flexStyle}>
-                            <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Doctor Address"/>
+                            <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Grant Address"/>
                                 <Button type="primary" onClick={this.grantAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
                                     Grant Access
                                 </Button>
@@ -189,6 +190,17 @@ class Patient extends Component {
                         </Card>
                     </Col>
 
+                    <Col className='col-3' span={6}>
+                        <h6>Revoke Access</h6>
+                        <Card bordered={true}>
+                            <div style={flexStyle}>
+                            <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Revoke Address"/>
+                                <Button type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
+                                    Revoke Access
+                                </Button>
+                            </div>
+                        </Card>
+                    </Col>
                     <Col className='col-3' span={6}>
                     <h6>Upload File</h6>
                         <Card bordered={true}>
@@ -199,21 +211,10 @@ class Patient extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <div>
-                
-                    <h6>Revoke Access</h6>
-                    <Card bordered={true}>
-                        <div style={flexStyle}>
-                        <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Doctor Address"/>
-                            <Button type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
-                                Revoke Access
-                            </Button>
-                        </div>
-                    </Card>
-            
                 </div>
-                <Row >
-                    
+
+                <div>
+            
                     <Collapse className='folderTab' defaultActiveKey={['1']}>
                     <h6>Your Files</h6>
                         <Panel   header={<Icon type="folder" />} key="1">
@@ -237,29 +238,31 @@ class Patient extends Component {
                             }
                         </Panel>
                     </Collapse>
-                </Row>
-            </div>
-            <div style={{height: "500px", overflowY: "scroll"}}>
-            <Collapse className='folderTab' defaultActiveKey={['1']}>
-                <h6>Doctor Consultation </h6>
-                <Panel   header={<Icon type="folder" />} key="2">
-                        { 
-                            doctorConsultation.map((doc,i) => {
-                                let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
-                                let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
-                                let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
-                                let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
-                                
-                                let consultProps = {doctor_id,consultation_advice, medicine, time_period};
 
-                                return <DisplayConsultation that={this} props={consultProps} />
-                            })
-                        }
-                    </Panel><Card bordered={true}>
+                </div>
+            
 
-                </Card>
-                </Collapse>
-            </div>
+                <div style={{height: "400px", overflowY: "scroll"}}>
+                <Collapse className='folderTab' defaultActiveKey={['1']}>
+                    <h6>Doctor Consultation </h6>
+                    <Panel   header={<Icon type="folder" />} key="2">
+                            { 
+                                doctorConsultation.map((doc,i) => {
+                                    let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
+                                    let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
+                                    let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
+                                    let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
+                                    
+                                    let consultProps = {doctor_id,consultation_advice, medicine, time_period};
+
+                                    return <DisplayConsultation that={this} props={consultProps} />
+                                })
+                            }
+                        </Panel><Card bordered={true}>
+
+                    </Card>
+                    </Collapse>
+                </div>
 
             </div>
             

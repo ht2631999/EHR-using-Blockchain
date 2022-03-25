@@ -1,0 +1,14 @@
+.doctorbody{
+    /* background-color: rgb(255, 0, 106); */
+    background-image: url(../Images/doc-patient1.jpg);
+    /* Full height */
+    height: auto;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    padding-bottom:  1000px;
+    background-size: cover;
+   
+    width: 100%;
+    top:50%;
+}

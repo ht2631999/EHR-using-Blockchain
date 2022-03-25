@@ -1,0 +1,16 @@
+.pbody{
+    /* background-color: rgb(255, 0, 106); */
+    background-image: url(../Images/doc-patient1.jpg);
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    
+    background-size: cover;
+    padding-bottom: 25px;
+    padding-top: 5%;
+    width: 100%;
+    top:50%;
+}
+

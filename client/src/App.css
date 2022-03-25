@@ -1,7 +1,15 @@
-.App {
-  text-align: center;
-}
 
+.App{
+  /* background-image: url("./Components/Images/doc-patient1.jpg"); */
+  height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* padding-bottom: 30%; */
+  text-align: center
+}
 .App-logo {
   height: 40vmin;
 }

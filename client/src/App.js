@@ -8,6 +8,8 @@ import DocLogin from "./Components/DocLogin";
 import Doctor from "./Components/Doctor";
 import Patient from "./Components/Patient";
 import NavbarComp from "./Components/NavbarComp";
+// import background from "./Components/Images/doctors.jpg"
+
 
 import "./App.css";
 import "./Components/css/antd.css"
@@ -56,6 +58,7 @@ class App extends Component {
     //DocLogin file will be intiated
     return (
       <div className="App">
+      
         
         <NavbarComp isLogged={this.state.loggedAcc} onlogout={()=>this.setState({loggedAcc:null,loggedas:null})}/>
          
@@ -74,8 +77,8 @@ class App extends Component {
           {!this.state.loggedAcc ? <DocLogin onlogin={(loggedAcc,loggedas)=>this.setState({loggedAcc,loggedas})} state = {this.state}/>
                :this.state.loggedas===0?<Doctor contract={this.state.contract} Acc={this.state.accounts}/>:<Patient contract={this.state.contract} Acc={this.state.accounts}/>}
                
-               </div>
                
+      </div>
     );
   }
 }

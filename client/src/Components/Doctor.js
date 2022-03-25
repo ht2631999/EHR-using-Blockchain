@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import {  Row, Col, Card, Tag } from 'antd';
 import DisplayPatient from "./display_patient";
-
+import './css/doctor.css'
 class Doctor extends Component {
 
     constructor(props){
@@ -32,7 +32,7 @@ class Doctor extends Component {
     render() {
         let { name, patient_list } = this.state;
         return (
-            <div>
+            <div className='doctorbody'>
                 <Card bordered={true}>
                     <div>
                         <b>Name:</b> {name}
