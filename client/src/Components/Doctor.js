@@ -53,7 +53,7 @@ class Doctor extends Component {
                     <div style={{width:'70%'}}>
                         {
                             this.state.load_patient ?
-                            <div> <h5><b>Patients Data</b> <DisplayPatient contract ={this.healthRecord} Acc={this.Acc} patient_address={this.state.load_patient} /> </h5></div> :
+                            <div> <h5>Patients Data <DisplayPatient contract ={this.healthRecord} Acc={this.Acc} patient_address={this.state.load_patient} /> </h5></div> :
                             <div></div>
                         }
                     </div>
