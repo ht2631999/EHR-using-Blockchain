@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {  Button, Card,Icon} from 'antd';
+import { Card,Icon} from 'antd';
 import PopUp from "./popup";
-
+import '../css/display_file.css'
 class display_file extends Component{ 
     render(){
 
@@ -10,7 +10,7 @@ class display_file extends Component{
     return(
         <div>
             <Card title={filename} bordered={true}>
-                <Button type="primary" onClick={that.showFile.bind(that, fhash, true)}><Icon type="file" />Show File</Button>
+                <button className='button-81' type="primary" onClick={that.showFile.bind(that, fhash, true)}><Icon type="file" />Show File</button>
                 <PopUp showPopup={that.state.showPopup[i]} closePopup={that.showFile.bind(that, fhash, false)}>
                     Downloading File
                     <img src={diplayImage} />
@@ -21,9 +21,5 @@ class display_file extends Component{
     }
 }
 
-const flexStyle = {
-    display:"flex", 
-    flexDirection:"column"
-}
 
 export default display_file;

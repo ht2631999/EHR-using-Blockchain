@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import {  Button, Input, Upload,Icon, message, Row, Col, Tag, Card, Collapse } from 'antd';
+import {   Input,  message, Tag, Card, Collapse } from 'antd';
 
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
 import './css/patient.css'
 
 import ipfs from "./ipfs-util"
-import axios from "axios";
-const Panel = Collapse.Panel;
- const Dragger = Upload.Dragger;
+
 
 class Patient extends Component {
 
@@ -149,7 +147,7 @@ class Patient extends Component {
             
             console.log('buffer',file);
         }
-    }
+    } 
     showFile(hash, flag) {
         let { files, showPopup } = this.state;
         if(files.indexOf(hash) > -1){
@@ -164,108 +162,109 @@ class Patient extends Component {
         
         return (
             <div className='pbody' >
-                <div >
-                <Row gutter={16} style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-                    <Col className='col-3' span={6}>
-                        <Card bordered={true} >
-                            <div className='userDetails'  >
-                                    <h4>Patient Details</h4>
-									<span> <b>Name:</b> {name} </span> 
-                                    <br></br>
-									<span> <b>Age:</b> {age}</span>
-								
-                            </div>
-                        </Card>
-                    </Col>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent:'space-around'}}>
+                    <div className='divborder' style={{width:'30%'}}>
+                        <div>
+                            <Card bordered={true} >
+                                <div className='userDetails'  >
+                                        <h4>Patient Details</h4>
+                                        <span> <b>Name:</b> {name} </span> 
+                                        <br></br>
+                                        <span> <b>Age:</b> {age}</span>
+                                    
+                                </div>
+                            </Card>
+                        </div>
+                        
+                        <div>
+                        <h6>Grant Access</h6>
+                            <Card bordered={true}>
+                                <div style={flexStyle}>
+                                <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Grant Address"/>
+                                    <button className='button-12' type="primary" onClick={this.grantAccess.bind(this)} htmlType="submit" >
+                                        Grant Access
+                                    </button>
+                                </div>
+                            </Card>
+                        </div>
+
+                        <div>
+                            <h6>Revoke Access</h6>
+                            <Card bordered={true}>
+                                <div style={flexStyle}>
+                                <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Revoke Address"/>
+                                    
+                                    <button className="button-12" type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" >
+                                        Revoke Access
+                                    </button>
+                                </div>
+                            </Card>
+                        </div>
+                        <div>
+                        <h6>Upload File</h6>
+                            <Card bordered={true}>
+                                <form onSubmit={this.uploadFile.bind(this)}>
+                                <input type="file" onChange={this.getFile.bind(this)}></input>
+                                <input type="submit"></input>
+                                </form>
+                            </Card>
+                        </div>
+                    </div>
+
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
+                        <div style={{width:'20%', overflow:'auto'}}>
+                            <Collapse className='folderTab' defaultActiveKey={['1']}>
+                            <h6>Your Files</h6>
+                            {/* <Panel   header={<Icon type="folder" />} key="1"> */}
+                                { 
+                                    files.map((fhash, i) => {
+                                        let filename = this.state.files[i]?this.state.files[i][0]:null;
+                                        
+                                        let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
+                                        let fileProps = {fhash, filename, diplayImage, i};
+                                        
+                                        return <DisplayFiles that={this} props={fileProps}/>
+                                    }) 
+                                }
+                            {/* </Panel> */}
+                            </Collapse>
+                        </div>
+                        <div style={{width:'35%',overflow:'auto'}}>
+                            <Collapse>
+                                <h6 style={{align:'centre'}}>Doctor List</h6>
+                                {/* <Panel key="2"> */}
+                                    { 
+                                        doctor_list.map((doctor) => {
+                                            return <Tag>{doctor}</Tag>
+                                        }) 
+                                    }
+                                {/* </Panel> */}
+                            </Collapse>
+                        </div>
                     
-                    <Col className='col-3' span={6}>
-                    <h6>Grant Access</h6>
-                        <Card bordered={true}>
-                            <div style={flexStyle}>
-                            <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Grant Address"/>
-                                <Button type="primary" onClick={this.grantAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
-                                    Grant Access
-                                </Button>
-                            </div>
-                        </Card>
-                    </Col>
 
-                    <Col className='col-3' span={6}>
-                        <h6>Revoke Access</h6>
-                        <Card bordered={true}>
-                            <div style={flexStyle}>
-                            <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Revoke Address"/>
-                                <Button type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" className="login-form-button loginButton">
-                                    Revoke Access
-                                </Button>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col className='col-3' span={6}>
-                    <h6>Upload File</h6>
-                        <Card bordered={true}>
-                            <form onSubmit={this.uploadFile.bind(this)}>
-                            <input type="file" onChange={this.getFile.bind(this)}></input>
-                            <input type="submit"></input>
-                            </form>
-                        </Card>
-                    </Col>
-                </Row>
+                        <div style={{height: "400px", overflow:'auto', width:'40%'}}>
+                        <Collapse className='folderTab' defaultActiveKey={['1']}>
+                            <h6>Doctor Consultation </h6>
+                            {/* <Panel   header={<Icon type="folder" />} key="2"> */}
+                                    { 
+                                        doctorConsultation.map((doc,i) => {
+                                            let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
+                                            let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
+                                            let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
+                                            let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
+                                            
+                                            let consultProps = {doctor_id,consultation_advice, medicine, time_period};
+
+                                            return <DisplayConsultation that={this} props={consultProps} />
+                                        })
+                                    }
+                                {/* </Panel> */}
+                            </Collapse>
+                        </div>
+                    </div>
                 </div>
-
-                <div>
-            
-                    <Collapse className='folderTab' defaultActiveKey={['1']}>
-                    <h6>Your Files</h6>
-                        <Panel   header={<Icon type="folder" />} key="1">
-                            { 
-                                files.map((fhash, i) => {
-                                    let filename = this.state.files[i]?this.state.files[i][0]:null;
-                                    
-                                    let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                    let fileProps = {fhash, filename, diplayImage, i};
-                                    
-                                    return <DisplayFiles that={this} props={fileProps}/>
-                                }) 
-                            }
-                        </Panel>
-                        <h6>Doctor List</h6>
-                        <Panel key="2">
-                            { 
-                                doctor_list.map((doctor) => {
-                                    return <Tag>{doctor}</Tag>
-                                }) 
-                            }
-                        </Panel>
-                    </Collapse>
-
-                </div>
-            
-
-                <div style={{height: "400px", overflowY: "scroll"}}>
-                <Collapse className='folderTab' defaultActiveKey={['1']}>
-                    <h6>Doctor Consultation </h6>
-                    <Panel   header={<Icon type="folder" />} key="2">
-                            { 
-                                doctorConsultation.map((doc,i) => {
-                                    let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
-                                    let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
-                                    let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
-                                    let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
-                                    
-                                    let consultProps = {doctor_id,consultation_advice, medicine, time_period};
-
-                                    return <DisplayConsultation that={this} props={consultProps} />
-                                })
-                            }
-                        </Panel><Card bordered={true}>
-
-                    </Card>
-                    </Collapse>
-                </div>
-
             </div>
-            
 
         );
     }
@@ -276,12 +275,6 @@ const flexStyle = {
     flexDirection:"column"
 }
 
-const mapStateToProps = (state) => {
-    return {
-      //auth: state.auth,
-      global_vars: state,
-    };
-};
 
 export default Patient;
 

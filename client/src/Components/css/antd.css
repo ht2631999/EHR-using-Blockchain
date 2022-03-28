@@ -169,7 +169,7 @@ a {
 a:focus {
   text-decoration: underline;
   -webkit-text-decoration-skip: ink;
-          text-decoration-skip: ink;
+          text-decoration-skip: auto;
 }
 a:hover {
   color: #40a9ff;

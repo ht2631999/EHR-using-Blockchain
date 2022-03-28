@@ -3,11 +3,11 @@
     /* background-image: url(../Images/doc-patient1.jpg); */
     /* Full height */
     height: auto;
-
-    /* Center and scale the image nicely */
-    background-position: center;
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    /* Center and scale the image nicely */
+    background-position: center;
     padding-bottom:  1000px;
     background-size: cover;
    

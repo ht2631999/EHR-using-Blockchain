@@ -5,7 +5,6 @@ class displayConsultation extends Component{
     render(){
 
     let {doctor_id,consultation_advice, medicine, time_period} = this.props.props;
-    let that =this.props.that;
 
     
     return(
@@ -25,9 +24,5 @@ class displayConsultation extends Component{
     }
 }
 
-const flexStyle = {
-    display:"flex", 
-    flexDirection:"column"
-}
 
 export default displayConsultation;
