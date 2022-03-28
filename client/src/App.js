@@ -59,7 +59,7 @@ class App extends Component {
     return (
       <div className="App">
       
-         
+        
         <NavbarComp isLogged={this.state.loggedAcc} onlogout={()=>this.setState({loggedAcc:null,loggedas:null})}/>
          
         {/* <h1>Good to Go!</h1> */}

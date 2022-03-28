@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom'
 
 import '../css/display_file.css'
 class display_file extends Component{ 
+
     render(){
 
     let {fhash, filename, diplayImage, i} = this.props.props;
