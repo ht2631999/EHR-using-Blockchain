@@ -1,6 +1,6 @@
 .doctorbody{
     /* background-color: rgb(255, 0, 106); */
-    /* background-image: url(../Images/doc-patient1.jpg); */
+    background-image: url(../Images/doc-patient1.jpg);
     /* Full height */
     height: auto;
     display: flex;
@@ -13,6 +13,7 @@
    
     width: 100%;
     top:50%;
+    
 }
 
 
