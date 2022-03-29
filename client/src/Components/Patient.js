@@ -148,12 +148,13 @@ class Patient extends Component {
             console.log('buffer',file);
         }
     } 
-    showFile(hash, flag) {
-        let { files, showPopup } = this.state;
+    
+    showFile(hash) {
+        let { files } = this.state;
         if(files.indexOf(hash) > -1){
-            let showPopupTemp = showPopup.slice(0);
-            showPopupTemp[files.indexOf(hash)] = flag;
-            this.setState({showPopup:showPopupTemp});
+            let path=`https://ipfs.io/ipfs/${hash[2]}`
+            console.log(path);
+            window.open(path);
         }
     }
 
@@ -204,7 +205,8 @@ class Patient extends Component {
                         <h6>Upload File</h6>
                             <Card bordered={true}>
                                 <form onSubmit={this.uploadFile.bind(this)}>
-                                <input type="file" onChange={this.getFile.bind(this)}></input>
+                                {/* accept only .pdf, .doc, .docx  */}
+                                <input type="file" accept='application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document' onChange={this.getFile.bind(this)}></input>
                                 <input type="submit"></input>
                                 </form>
                             </Card>

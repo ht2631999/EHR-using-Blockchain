@@ -72,12 +72,12 @@ class DisplayPatient extends Component {
     }
 
 
-    showFile(hash, flag) {
-        let { files, showPopup } = this.state;
+    showFile(hash) {
+        let { files } = this.state;
         if(files.indexOf(hash) > -1){
-            let showPopupTemp = showPopup.slice(0);
-            showPopupTemp[files.indexOf(hash)] = flag;
-            this.setState({showPopup:showPopupTemp});
+            let path=`https://ipfs.io/ipfs/${hash[2]}`
+            console.log(path);
+            window.open(path);
         }
     }
 
@@ -113,10 +113,11 @@ class DisplayPatient extends Component {
                                             
 
                                             let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
+                                            
 
                                             let fileProps = {fhash, filename, diplayImage, i};
                                             
-                                            return <DisplayFiles that={this} props={fileProps}/>
+                                            return <DisplayFiles props={fileProps} that={this} />
                                         }) 
                                     }
                             </Collapse>
