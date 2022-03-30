@@ -1,8 +1,11 @@
 pragma solidity >=0.4.21 <0.7.0;
 pragma experimental ABIEncoderV2;
+import "./DoctorAddRecord.sol";
 
 contract optimized_healthCare {
   
+  DoctorAddRecord public doctorAddRecord;
+
   address private owner;
   mapping (address => doctor) private doctors;
   
@@ -10,8 +13,15 @@ contract optimized_healthCare {
   mapping (address => mapping (address => uint)) private patientToDoctor; //patients and list of doctors allowed access to
   mapping (address => mapping (bytes32 => uint)) private patientToFile; //files mapped to patients
   mapping (address => files[]) private patientFiles;
-  mapping (address => doctorOfferedConsultation[]) doctorOfferedConsultationList;
+  mapping (address => doctorOfferedConsultation[]) private doctorOfferedConsultationList;
 
+  //structure of doctor added files
+  struct doctorAddedFiles{
+    string file_name;
+    string file_type;
+    string file_hash;
+    address doc_id;
+  }
   
   //structure of patient file
   struct files{
@@ -246,6 +256,9 @@ contract optimized_healthCare {
   function getPatientInfo() public view checkPatient(msg.sender) returns(string memory,address, uint8, bytes32[] memory , address[] memory) {
       patient memory p = patients[msg.sender];
       return (p.name,p.id, p.age, p.files, p.doctor_list);
+
+      //if adding feature of doctorAddedPatientFiles
+      //return (p.name, p.age, p.id, patientFiles[pat],doctorAddedPatientFiles[pat]);
   }
 
 
@@ -259,10 +272,10 @@ contract optimized_healthCare {
   
   function getPatientInfoForDoctor(address pat) public view checkPatient(pat) checkDoctor(msg.sender) returns(string memory, uint8, address, files[] memory){
       patient memory p = patients[pat];
-
-      //require(patientToDoctor[pat][msg.sender] > 0);
-
       return (p.name, p.age, p.id, patientFiles[pat]);
+
+      //if adding feature of doctorAddedPatientFiles
+      //return (p.name, p.age, p.id, patientFiles[pat],doctorAddedPatientFiles[pat]);
     }
 
   event doctorOfferConsultation(address _doctor, string message, address _patient, string _consultation, string _medicine, uint256 gas_used);
@@ -285,4 +298,5 @@ contract optimized_healthCare {
   function getDoctorConsultationForPatient()  public view checkPatient(msg.sender) returns (doctorOfferedConsultation[] memory){
     return (doctorOfferedConsultationList[msg.sender]);
   }
+
 }

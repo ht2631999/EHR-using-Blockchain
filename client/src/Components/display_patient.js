@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 
 import {Card,Collapse } from 'antd';
-
+import ipfs from './ipfs-util'
 
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
@@ -13,6 +13,8 @@ class DisplayPatient extends Component {
         super(props); 
 
         this.addConsultation = this.addConsultation.bind(this);
+        this.getFile = this.getFile.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
         
     }
 
@@ -24,11 +26,14 @@ class DisplayPatient extends Component {
         showPopup:[],
         files:[],
         doctorConsultation:[],
+        doctorAddedFiles:[],
         file: null
     }
 
-    contract = this.props.contract;
+    doctorAddRecord = this.props.contract[1];
+    contract = this.props.contract[0];
     Acc= this.props.Acc;
+
     async loadFiles(){
 
         const data = await this.contract.methods.getPatientInfoForDoctor(this.props.patient_address).call({from:this.Acc[0]});
@@ -48,13 +53,28 @@ class DisplayPatient extends Component {
         console.log('doctor consultation', this.state.doctorConsultation);
             
     }
+
+    async loadDoctorAddedFiles(){
+
+        const data = await this.doctorAddRecord.methods.getDoctorAddedFiles(this.props.patient_address).call({from:this.Acc[0]});
+        console.log('Doctor added files',data);
+        if(data[3])
+        this.setState({doctorAddedFiles: data});
+
+        console.log('doctor added files',this.state.doctorAddedFiles);
+    }
     
     componentWillMount() {
         if(this.props.patient_address)
             this.loadFiles(this.props.patient_address);
             this.loadDoctorConsultation(this.props.patient_address);
+            //uncomment after uncommenting from smart contract and after successful migration
+            this.loadDoctorAddedFiles(this.props.patient_address)
+            // console.log(this.doctorAddRecord)
             
     }
+
+
     
 
     async addConsultation(event){
@@ -69,6 +89,49 @@ class DisplayPatient extends Component {
             console.log("consultation added");
         else
             console.log("consultation failed")
+    }
+
+    updateFileHash = async (name,type,ipfshash) => {
+
+        //sending transaction and storing result to state variables
+
+         let res = await this.doctorAddRecord.methods.doctorAddFiles(this.props.patient_address ,name,type,ipfshash).send({"from":this.Acc[0]});
+             console.log(res);
+         if(res)
+             console.log("file upload successful");
+         else
+             console.log("file upload unsuccessful");
+
+
+     }
+
+
+    async uploadFile(event)
+    {
+        event.preventDefault();
+
+        ipfs.files.add(this.state.buffer,(err,res)=>{
+            if(err){
+                console.error(err)
+                return 
+            }
+
+           this.updateFileHash(this.state.file.name,this.state.file.type,res[0].hash)
+        })
+    }
+
+    getFile(event)
+    {
+        event.preventDefault();
+        console.log("getfile");
+        const file = event.target.files[0];
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend =() =>{
+            this.setState({buffer:Buffer(reader.result),file});
+
+            console.log('buffer',file);
+        }
     }
 
 
@@ -87,7 +150,7 @@ class DisplayPatient extends Component {
 
     render() {
         let { patient_address } = this.props;
-        let { patient_name, patient_age, files,  doctorConsultation } = this.state;
+        let { patient_name, patient_age, files, doctorAddedFiles, doctorConsultation } = this.state;
 
         
 
@@ -101,7 +164,7 @@ class DisplayPatient extends Component {
                 </Card>
 
 
-                <div style={{display:'flex', justifyContent:'space-between', width:'142%'}}>
+                <div style={{display:'flex', justifyContent:'space-between', width:'142%', paddingBottom:'30px'}}>
                     
                     <div style={{display:'flex', flexDirection:'column', width:'35%', border:'1px black solid'}}>
                         <h5>Patient Files</h5>
@@ -147,27 +210,60 @@ class DisplayPatient extends Component {
                         </div>
                     </div>
 
-                    <div style={{width:'34%', height:'auto',paddingLeft:'20px', border:'1px black solid'}}>
-                        <h6>Add consultation</h6>
-                        
-                        <form onSubmit={this.addConsultation}>
-                            <table>
-                                
-                                <tr>
-                                    <td><input type='text' id='consultation' placeholder='consultation'/></td>
-                                </tr>
-                                
-                                <tr>
-                                    <td><input type="text" id='medicine' placeholder='medicine'/></td>
-                                </tr>
+                    <div style={{display:'flex', width:'35%', border:'1px black solid',paddingTop:'20px'}}>
+                        <h5>Doctor Added Files </h5>
+                        <div style={{ overflowY: "auto",width:'100%', height:'310px'}}>
+                        <Collapse className='folderTab' defaultActiveKey={['1']}>
+                                    { 
+                                        doctorAddedFiles.map((fhash, i) => {
+                                            let filename = this.state.doctorAddedFiles[i]?this.state.doctorAddedFiles[i][0]:null;
+                                            let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
+                                            let fileProps = {fhash, filename, diplayImage, i};
 
-                                <tr>
-                                    <td><input type="text" id='time_period' placeholder='time period'/></td>
-                                </tr>
-                                <button className='button-12' type="submit" value="submit">submit</button>
-                            </table>
-                        </form>
-                        
+                                            return <DisplayFiles that={this} props={fileProps}/>
+                                        }) 
+                                    }
+                            </Collapse>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style={{display:'flex', justifyContent:'flex-start', width:'142%'}}>
+                    
+                    
+                    <div style={{width:'33%', height:'auto',paddingLeft:'20px', border:'1px black solid'}}>
+                            <h6>Add consultation</h6>
+                            <div>
+                            <form onSubmit={this.addConsultation}>
+                                <table>
+                                    
+                                    <tr>
+                                        <td><input type='text' id='consultation' placeholder='consultation'/></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td><input type="text" id='medicine' placeholder='medicine'/></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><input type="text" id='time_period' placeholder='time period'/></td>
+                                    </tr>
+                                    <button className='button-12' type="submit" value="submit">submit</button>
+                                </table>
+                            </form>
+                            </div>
+                        </div>
+                    
+                    <div style={{width:'34%', height:'auto',paddingLeft:'20px', border:'1px black solid'}}>
+                        <h5>Upload File/Report</h5>
+                        <div>
+                        <Card bordered={true}>
+                                <form onSubmit={this.uploadFile}>
+                                <input type="file" onChange={this.getFile}></input>
+                                <input type="submit"></input>
+                                </form>
+                        </Card>
+                        </div>
                     </div>
                 </div>
             </div>

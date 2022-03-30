@@ -3,6 +3,7 @@
 
 import React, { Component } from "react";
 import optHealthCare from "./contracts/optimized_healthCare.json"
+import docAddRecord from "./contracts/DoctorAddRecord.json"
 import getWeb3 from "./getWeb3";
 import DocLogin from "./Components/DocLogin";
 import Doctor from "./Components/Doctor";
@@ -27,10 +28,16 @@ class App extends Component {
       const networkId = await web3.eth.net.getId();
       var deployedNetwork = optHealthCare.networks[networkId];
 
-       tmpcont['OPT'] = new web3.eth.Contract(
+      tmpcont['OPT'] = new web3.eth.Contract(
         optHealthCare.abi,
         deployedNetwork && deployedNetwork.address,
       );
+      
+      tmpcont['DAR'] = new web3.eth.Contract(
+        docAddRecord.abi,
+        deployedNetwork && deployedNetwork.address,
+      );
+
 
      //set State variables to derived values.
       this.setState({ web3, accounts, contract:tmpcont});

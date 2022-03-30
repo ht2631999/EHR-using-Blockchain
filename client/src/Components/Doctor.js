@@ -9,6 +9,8 @@ class Doctor extends Component {
         super(props);
     }
      healthRecord =this.props.contract["OPT"];
+     doctorAddFiles= this.props.contract["DAR"];
+     contracts=[this.healthRecord, this.doctorAddFiles];
      Acc =this.props.Acc;
     state = {
         name: "",
@@ -53,7 +55,7 @@ class Doctor extends Component {
                     <div style={{width:'70%'}}>
                         {
                             this.state.load_patient ?
-                            <div> <h5>Patients Data <DisplayPatient contract ={this.healthRecord} Acc={this.Acc} patient_address={this.state.load_patient} /> </h5></div> :
+                            <div> <h5>Patients Data <DisplayPatient contract ={this.contracts} Acc={this.Acc} patient_address={this.state.load_patient} /> </h5></div> :
                             <div></div>
                         }
                     </div>

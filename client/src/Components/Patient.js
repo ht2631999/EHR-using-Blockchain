@@ -205,8 +205,8 @@ class Patient extends Component {
                         <h6>Upload File</h6>
                             <Card bordered={true}>
                                 <form onSubmit={this.uploadFile.bind(this)}>
-                                {/* accept only .pdf, .doc, .docx  */}
-                                <input type="file" accept='application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document' onChange={this.getFile.bind(this)}></input>
+                                {/* accept only .pdf and images as ipfs stores images, pdfs, videos*/}
+                                <input type="file" accept='application/pdf, image/*' onChange={this.getFile.bind(this)}></input>
                                 <input type="submit"></input>
                                 </form>
                             </Card>
@@ -214,7 +214,7 @@ class Patient extends Component {
                     </div>
 
                     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
-                        <div style={{width:'20%', overflow:'auto'}}>
+                        <div style={{height: "310px", width:'20%', overflow:'auto'}}>
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
                             <h6>Your Files</h6>
                             {/* <Panel   header={<Icon type="folder" />} key="1"> */}
@@ -231,7 +231,7 @@ class Patient extends Component {
                             {/* </Panel> */}
                             </Collapse>
                         </div>
-                        <div style={{width:'35%',overflow:'auto'}}>
+                        <div style={{height: "310px", width:'35%',overflow:'auto'}}>
                             <Collapse>
                                 <h6 style={{align:'centre'}}>Doctor List</h6>
                                 {/* <Panel key="2"> */}
@@ -245,7 +245,7 @@ class Patient extends Component {
                         </div>
                     
 
-                        <div style={{height: "400px", overflow:'auto', width:'40%'}}>
+                        <div style={{height: "310px", overflow:'auto', width:'40%'}}>
                         <Collapse className='folderTab' defaultActiveKey={['1']}>
                             <h6>Doctor Consultation </h6>
                             {/* <Panel   header={<Icon type="folder" />} key="2"> */}
