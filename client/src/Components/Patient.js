@@ -199,122 +199,121 @@ class Patient extends Component {
         let { name, age, files, doctor_list, doctorConsultation, doctorAddedFiles } = this.state;
         
         return (
-            <div className='pbody' >
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent:'space-around'}}>
-                    <div className='divborder' style={{width:'30%'}}>
-                        <div>
-                            <Card bordered={true} >
-                                <div className='userDetails'  >
-                                        <h4>Patient Details</h4>
-                                        <span> <b>Name:</b> {name} </span> 
-                                        <br></br>
-                                        <span> <b>Age:</b> {age}</span>
-                                    
-                                </div>
-                            </Card>
-                        </div>
-                        
-                        <div>
-                        <h6>Grant Access</h6>
-                            <Card bordered={true}>
-                                <div style={flexStyle}>
-                                <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Grant Address"/>
-                                    <button className='button-12' type="primary" onClick={this.grantAccess.bind(this)} htmlType="submit" >
-                                        Grant Access
-                                    </button>
-                                </div>
-                            </Card>
-                        </div>
+            <div className='container-fluid' >
+                <div style={{border: '1px solid black'}}>
+                    
+                        <Card bordered={true} >
+                            <div className='userDetails'  >
+                                    <h4>Patient Details</h4>
+                                    <span> <b>Name:</b> {name} </span> 
+                                    <br></br>
+                                    <span> <b>Age:</b> {age}</span>
+                                
+                            </div>
+                        </Card>
+    
+                </div>
 
-                        <div>
-                            <h6>Revoke Access</h6>
-                            <Card bordered={true}>
-                                <div style={flexStyle}>
-                                <Input className='emailId' style={{width:"100%"}} value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Revoke Address"/>
-                                    
-                                    <button className="button-12" type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" >
-                                        Revoke Access
-                                    </button>
-                                </div>
-                            </Card>
-                        </div>
-                        <div>
-                        <h6>Upload File</h6>
-                            <Card bordered={true}>
-                                <form onSubmit={this.uploadFile.bind(this)}>
-                                {/* accept only .pdf and images as ipfs stores images, pdfs, videos*/}
-                                <input type="file" accept='application/pdf, image/*' onChange={this.getFile.bind(this)}></input>
-                                <input type="submit"></input>
-                                </form>
-                            </Card>
-                        </div>
+                <div className='row' style={{paddingTop:'25px'}}>    
+                    <div className='col' style={{border: '1px solid black'}}>
+                    <h6>Grant Access</h6>
+                        <Card bordered={true}>
+                            <div style={flexStyle}>
+                            <Input className='emailId' value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Grant Address"/>
+                                <button className='button-12' type="primary" onClick={this.grantAccess.bind(this)} htmlType="submit" >
+                                    Grant Access
+                                </button>
+                            </div>
+                        </Card>
                     </div>
 
-                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
-                        <div style={{height: "310px", width:'25%', overflow:'auto'}}>
-                            <Collapse className='folderTab' defaultActiveKey={['1']}>
-                            <h6>Your Files</h6>
-                            {/* <Panel   header={<Icon type="folder" />} key="1"> */}
+                    <div className='col' style={{border: '1px solid black'}}>
+                        <h6>Revoke Access</h6>
+                        <Card bordered={true}>
+                            <div style={flexStyle}>
+                            <Input className='emailId' value={this.state.doctorId} onChange={this.onTextChange.bind(this, 'doctorId')} size="small" placeholder="Revoke Address"/>
+                                
+                                <button className="button-12" type="primary" onClick={this.revokeAccess.bind(this)} htmlType="submit" >
+                                    Revoke Access
+                                </button>
+                            </div>
+                        </Card>
+                    </div>
+                    
+                </div>
+                
+                <div className='row' style={{paddingTop:'25px'}}>
+
+                    <div className='col-md' style={{height: "310px",border: '1px solid black'}}>
+                    <h6>Upload File</h6>
+                        <Card bordered={true}>
+                            <form onSubmit={this.uploadFile.bind(this)}>
+                            {/* accept only .pdf and images as ipfs stores images, pdfs, videos*/}
+                            <input type="file" accept='application/pdf, image/*' onChange={this.getFile.bind(this)}></input>
+                            <input type="submit"></input>
+                            </form>
+                        </Card>
+                    </div>
+
+                    <div className='col-md' style={{height: "310px", width:'25%', overflow:'auto',border: '1px solid black'}}>
+                        <Collapse className='folderTab' defaultActiveKey={['1']}>
+                        <h6>Your Files</h6>
+                            { 
+                                files.map((fhash, i) => {
+                                    
+                                    return <DisplayFiles that={this} props={fhash}/>
+                                }) 
+                            }
+                        </Collapse>
+                    </div>
+                
+                </div>
+
+                <div className='row' style={{paddingTop:'25px'}}>
+                    <div className='col' style={{height: "310px",overflow:'scroll',border: '1px solid black'}}>
+                        <Collapse>
+                            <h6 style={{align:'centre'}}>Doctor List</h6>
                                 { 
-                                    files.map((fhash, i) => {
-                                        
-                                        return <DisplayFiles that={this} props={fhash}/>
+                                    doctor_list.map((doctor) => {
+                                        return <Tag>{doctor}</Tag>
                                     }) 
                                 }
-                            {/* </Panel> */}
-                            </Collapse>
-                        </div>
-                        <div style={{height: "310px", width:'39%',overflow:'scroll'}}>
-                            <Collapse>
-                                <h6 style={{align:'centre'}}>Doctor List</h6>
-                                {/* <Panel key="2"> */}
-                                    { 
-                                        doctor_list.map((doctor) => {
-                                            return <Tag>{doctor}</Tag>
-                                        }) 
-                                    }
-                                {/* </Panel> */}
-                            </Collapse>
-                        </div>
-                    
-
-                        <div style={{height: "310px", overflow:'auto', width:'41%'}}>
-                        <Collapse className='folderTab' defaultActiveKey={['1']}>
-                            <h6>Doctor Consultation </h6>
-                            {/* <Panel   header={<Icon type="folder" />} key="2"> */}
-                                    { 
-                                        doctorConsultation.map((doc,i) => {
-                                            let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
-                                            let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
-                                            let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
-                                            let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
-                                            
-                                            let consultProps = {doctor_id,consultation_advice, medicine, time_period};
-
-                                            return <DisplayConsultation that={this} props={consultProps} />
-                                        })
-                                    }
-                                {/* </Panel> */}
-                            </Collapse>
-                        </div>
+                        </Collapse>
                     </div>
-                             
-                </div>
-                <div style={{ width:'35%', backgroundColor:'white'}}>
+                    <div className='col' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
+                    <Collapse className='folderTab' defaultActiveKey={['1']}>
+                        <h6>Doctor Consultation </h6>
+                                { 
+                                    doctorConsultation.map((doc,i) => {
+                                        let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
+                                        let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
+                                        let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
+                                        let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
+                                        
+                                        let consultProps = {doctor_id,consultation_advice, medicine, time_period};
+
+                                        return <DisplayConsultation that={this} props={consultProps} />
+                                    })
+                                }
+                        </Collapse>
+                    </div>
+
+                    <div className='col' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
+                        
+                        <Collapse className='folderTab' defaultActiveKey={['1']}>
                         <h5>Doctor Added Files</h5>
-                        <div style={{height: "210px", overflowY: "auto",width:'100%'}}>
-                            <Collapse className='folderTab' defaultActiveKey={['1']}>
-                                    { 
-                                        doctorAddedFiles.map((fhash, i) => {
-                                            
-                                            return <DisplayFiles props={fhash} that={this} />
-                                        }) 
-                                    }
-                            </Collapse>
-                        </div>
-                </div> 
-                
+                                { 
+                                    doctorAddedFiles.map((fhash, i) => {
+                                        
+                                        return <DisplayFiles props={fhash} that={this} />
+                                    }) 
+                                }
+                        </Collapse>
+                    </div> 
+                </div>  
+
             </div>
+                
 
         );
     }
