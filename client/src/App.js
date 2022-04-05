@@ -33,9 +33,11 @@ class App extends Component {
         deployedNetwork && deployedNetwork.address,
       );
       
+      var deployedNetworks = docAddRecord.networks[networkId];
+
       tmpcont['DAR'] = new web3.eth.Contract(
         docAddRecord.abi,
-        deployedNetwork && deployedNetwork.address,
+        deployedNetworks && deployedNetworks.address,
       );
 
 

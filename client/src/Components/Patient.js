@@ -213,8 +213,8 @@ class Patient extends Component {
                         </div>
                     </div>
 
-                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
-                        <div style={{height: "310px", width:'20%', overflow:'auto'}}>
+                    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}>
+                        <div style={{height: "310px", width:'25%', overflow:'auto'}}>
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
                             <h6>Your Files</h6>
                             {/* <Panel   header={<Icon type="folder" />} key="1"> */}
@@ -231,7 +231,7 @@ class Patient extends Component {
                             {/* </Panel> */}
                             </Collapse>
                         </div>
-                        <div style={{height: "310px", width:'35%',overflow:'auto'}}>
+                        <div style={{height: "310px", width:'39%',overflow:'scroll'}}>
                             <Collapse>
                                 <h6 style={{align:'centre'}}>Doctor List</h6>
                                 {/* <Panel key="2"> */}
@@ -245,7 +245,7 @@ class Patient extends Component {
                         </div>
                     
 
-                        <div style={{height: "310px", overflow:'auto', width:'40%'}}>
+                        <div style={{height: "310px", overflow:'auto', width:'41%'}}>
                         <Collapse className='folderTab' defaultActiveKey={['1']}>
                             <h6>Doctor Consultation </h6>
                             {/* <Panel   header={<Icon type="folder" />} key="2"> */}

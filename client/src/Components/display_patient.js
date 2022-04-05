@@ -2,7 +2,8 @@ import React, { Component, } from 'react';
 
 import {Card,Collapse } from 'antd';
 import ipfs from './ipfs-util'
-
+import healthRecord from "../contracts/DoctorAddRecord.json"
+import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
 import './css/display_patient.css'
@@ -30,10 +31,22 @@ class DisplayPatient extends Component {
         file: null
     }
 
-    doctorAddRecord = this.props.contract[1];
+   
     contract = this.props.contract[0];
+    doctorAddRecord = this.props.contract[1];
+
     Acc= this.props.Acc;
 
+    async loadcontract(){
+        var web3 = await getWeb3();
+        const networkId = await web3.eth.net.getId();
+        var deployedNetwork = healthRecord.networks[networkId];
+
+        this.doctorAddRecord = new web3.eth.Contract(
+            healthRecord.abi,
+            deployedNetwork && deployedNetwork.address,
+          );
+    }
     async loadFiles(){
 
         const data = await this.contract.methods.getPatientInfoForDoctor(this.props.patient_address).call({from:this.Acc[0]});
@@ -55,16 +68,20 @@ class DisplayPatient extends Component {
     }
 
     async loadDoctorAddedFiles(){
-
+        try{
         const data = await this.doctorAddRecord.methods.getDoctorAddedFiles(this.props.patient_address).call({from:this.Acc[0]});
-        console.log('Doctor added files',data);
-        if(data[3])
+        if(data)
         this.setState({doctorAddedFiles: data});
 
         console.log('doctor added files',this.state.doctorAddedFiles);
+        }
+        catch(e){
+            console.log(e);
+        }
     }
     
     componentWillMount() {
+        
         if(this.props.patient_address)
             this.loadFiles(this.props.patient_address);
             this.loadDoctorConsultation(this.props.patient_address);
@@ -94,15 +111,17 @@ class DisplayPatient extends Component {
     updateFileHash = async (name,type,ipfshash) => {
 
         //sending transaction and storing result to state variables
-
+        try{
          let res = await this.doctorAddRecord.methods.doctorAddFiles(this.props.patient_address ,name,type,ipfshash).send({"from":this.Acc[0]});
              console.log(res);
          if(res)
              console.log("file upload successful");
          else
              console.log("file upload unsuccessful");
-
-
+        }
+        catch(e){
+            console.log(e);
+        }
      }
 
 
@@ -217,8 +236,8 @@ class DisplayPatient extends Component {
                                     { 
                                         doctorAddedFiles.map((fhash, i) => {
                                             let filename = this.state.doctorAddedFiles[i]?this.state.doctorAddedFiles[i][0]:null;
-                                            let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                            let fileProps = {fhash, filename, diplayImage, i};
+                                            // let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
+                                            let fileProps = {fhash, filename, i};
 
                                             return <DisplayFiles that={this} props={fileProps}/>
                                         }) 

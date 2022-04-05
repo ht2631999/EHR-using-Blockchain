@@ -8,6 +8,7 @@
     flex-direction: column;
     /* Center and scale the image nicely */
     background-position: center;
+    background-color: #ecebedf5;
     padding-bottom:  1000px;
     background-size: cover;
    
