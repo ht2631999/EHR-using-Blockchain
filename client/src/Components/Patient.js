@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {   Input,  message, Tag, Card, Collapse } from 'antd';
-
+import healthRecord from "../contracts/DoctorAddRecord.json"
+import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
 import './css/patient.css'
@@ -17,6 +18,7 @@ class Patient extends Component {
     }
 
     contract =this.props.contract['OPT'];
+    doctorAddRecord = this.props.contract['DAR'];
     accounts =this.props.Acc;
 
     state = {
@@ -32,10 +34,28 @@ class Patient extends Component {
         loaded:false,
         buffer:null,
         doctorConsultation:[],
+        doctorAddedFiles:[],
         
         file:null
     }
-     updateFileHash = async (name,type,ipfshash) => {
+
+
+    async loadcontract(){
+        var web3 = await getWeb3();
+        const networkId = await web3.eth.net.getId();
+        var deployedNetwork = healthRecord.networks[networkId];
+
+        this.doctorAddRecord = new web3.eth.Contract(
+            healthRecord.abi,
+            deployedNetwork && deployedNetwork.address,
+          );
+
+          console.log("contract loaded")
+    }
+
+
+
+    updateFileHash = async (name,type,ipfshash) => {
         
        //sending transaction and storing result to state variables
 	     
@@ -52,8 +72,9 @@ class Patient extends Component {
       
     componentDidMount(){ 
         
-        this.loadPatient();     
+        this.loadPatient();    
     }
+
 
 
     async loadFiles(){
@@ -69,7 +90,10 @@ class Patient extends Component {
         this.setState({name:res[0],age:res[2],files:res[3],doctor_list:res[4]},
         () => {
             this.loadFiles();
+            this.loadcontract();
+            this.loadDoctorAddedFiles();
             this.loadDoctorConsultation();
+            
         
         });
       
@@ -83,6 +107,19 @@ class Patient extends Component {
 
         console.log('doctor consultation', this.state.doctorConsultation);
             
+    }
+
+    async loadDoctorAddedFiles(){
+        try{
+        const data = await this.doctorAddRecord.methods.getDoctorAddedFiles(this.accounts[0]).call({from:this.accounts[0]});
+        if(data)
+        this.setState({doctorAddedFiles: data});
+
+        console.log('doctor added files',this.state.doctorAddedFiles);
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 
     async grantAccess(){
@@ -150,8 +187,8 @@ class Patient extends Component {
     } 
     
     showFile(hash) {
-        let { files } = this.state;
-        if(files.indexOf(hash) > -1){
+        let { files, doctorAddedFiles} = this.state;
+        if(files.indexOf(hash) > -1 || doctorAddedFiles.indexOf(hash)>-1){
             let path=`https://ipfs.io/ipfs/${hash[2]}`
             console.log(path);
             window.open(path);
@@ -159,7 +196,7 @@ class Patient extends Component {
     }
 
     render() {
-        let { name, age, files, doctor_list, doctorConsultation } = this.state;
+        let { name, age, files, doctor_list, doctorConsultation, doctorAddedFiles } = this.state;
         
         return (
             <div className='pbody' >
@@ -220,12 +257,8 @@ class Patient extends Component {
                             {/* <Panel   header={<Icon type="folder" />} key="1"> */}
                                 { 
                                     files.map((fhash, i) => {
-                                        let filename = this.state.files[i]?this.state.files[i][0]:null;
                                         
-                                        let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                        let fileProps = {fhash, filename, diplayImage, i};
-                                        
-                                        return <DisplayFiles that={this} props={fileProps}/>
+                                        return <DisplayFiles that={this} props={fhash}/>
                                     }) 
                                 }
                             {/* </Panel> */}
@@ -265,7 +298,22 @@ class Patient extends Component {
                             </Collapse>
                         </div>
                     </div>
+                             
                 </div>
+                <div style={{ width:'35%', backgroundColor:'white'}}>
+                        <h5>Doctor Added Files</h5>
+                        <div style={{height: "210px", overflowY: "auto",width:'100%'}}>
+                            <Collapse className='folderTab' defaultActiveKey={['1']}>
+                                    { 
+                                        doctorAddedFiles.map((fhash, i) => {
+                                            
+                                            return <DisplayFiles props={fhash} that={this} />
+                                        }) 
+                                    }
+                            </Collapse>
+                        </div>
+                </div> 
+                
             </div>
 
         );

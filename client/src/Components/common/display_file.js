@@ -6,11 +6,11 @@ class display_file extends Component{
 
     render(){
 
-    let {fhash, filename, diplayImage, i} = this.props.props;
+    let fhash = this.props.props;
     let that =this.props.that;
     return(
         <div>
-            <Card title={filename} bordered={true}>
+            <Card title={fhash[0]} bordered={true}>
                 <button className='button-81' type="primary" onClick={that.showFile.bind(that, fhash, true)}><Icon type="file" />Show File</button>
                 {/* <PopUp showPopup={that.state.showPopup[i]} closePopup={that.showFile.bind(that, fhash, false)}>
                     Downloading File

@@ -155,8 +155,8 @@ class DisplayPatient extends Component {
 
 
     showFile(hash) {
-        let { files } = this.state;
-        if(files.indexOf(hash) > -1){
+        let { files,doctorAddedFiles } = this.state;
+        if(files.indexOf(hash) > -1 || doctorAddedFiles.indexOf(hash)>-1){
             let path=`https://ipfs.io/ipfs/${hash[2]}`
             console.log(path);
             window.open(path);
@@ -190,16 +190,9 @@ class DisplayPatient extends Component {
                         <div style={{height: "310px", overflowY: "auto",width:'100%',paddingRight:'15px'}}>
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
                                     { 
-                                        files.map((fhash, i) => {
-                                            let filename = this.state.files[i]?this.state.files[i][0]:null;
-                                            
+                                        files.map((fhash, i) => {                                            
 
-                                            let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                            
-
-                                            let fileProps = {fhash, filename, diplayImage, i};
-                                            
-                                            return <DisplayFiles props={fileProps} that={this} />
+                                            return <DisplayFiles props={fhash} that={this} />
                                         }) 
                                     }
                             </Collapse>
@@ -229,17 +222,14 @@ class DisplayPatient extends Component {
                         </div>
                     </div>
 
-                    <div style={{display:'flex', width:'35%', border:'1px black solid',paddingTop:'20px'}}>
-                        <h5>Doctor Added Files </h5>
-                        <div style={{ overflowY: "auto",width:'100%', height:'310px'}}>
-                        <Collapse className='folderTab' defaultActiveKey={['1']}>
+                    <div style={{display:'flex', flexDirection:'column', width:'35%', border:'1px black solid'}}>
+                        <h5>Doctor Added Files</h5>
+                        <div style={{height: "310px", overflowY: "auto",width:'100%',paddingRight:'15px'}}>
+                            <Collapse className='folderTab' defaultActiveKey={['1']}>
                                     { 
                                         doctorAddedFiles.map((fhash, i) => {
-                                            let filename = this.state.doctorAddedFiles[i]?this.state.doctorAddedFiles[i][0]:null;
-                                            // let diplayImage = `https://ipfs.io/ipfs/${this.state.files[i][2]}`;
-                                            let fileProps = {fhash, filename, i};
-
-                                            return <DisplayFiles that={this} props={fileProps}/>
+                                            
+                                            return <DisplayFiles props={fhash} that={this} />
                                         }) 
                                     }
                             </Collapse>
