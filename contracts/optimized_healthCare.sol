@@ -252,7 +252,7 @@ contract optimized_healthCare {
     return (owner);
   }
 
-  function hospitalGrantAccess(address _user, address _patient) checkPatient(patient) public
+  function hospitalGrantAccess(address _user, address _patient) public checkPatient(_patient)
   {
     doctor storage d = doctors[_user];
     patient storage p = patients[_patient];
