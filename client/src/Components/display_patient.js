@@ -6,6 +6,7 @@ import healthRecord from "../contracts/DoctorAddRecord.json"
 import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
+import DisplayPayment from './common/displayPayment';
 import './css/display_patient.css'
 
 class DisplayPatient extends Component {
@@ -28,6 +29,8 @@ class DisplayPatient extends Component {
         files:[],
         doctorConsultation:[],
         doctorAddedFiles:[],
+        doctorPassbook: [],
+        doctorBalance:0,
         file: null
     }
 
@@ -58,7 +61,7 @@ class DisplayPatient extends Component {
     }
 
     async loadDoctorConsultation(){
-        const data = await this.contract.methods.getDoctorConsultation(this.props.patient_address).call({from:this.Acc[0]});
+        const data = await this.doctorAddRecord.methods.getDoctorConsultation(this.props.patient_address).call({from:this.Acc[0]});
         
         if(data)
             this.setState({doctorConsultation:data});
@@ -79,6 +82,21 @@ class DisplayPatient extends Component {
             console.log(e);
         }
     }
+
+    // async loadDoctorWallet(){
+    //     try{
+    //         const data = await this.contract.methods.getReceivedPayments().call({from:this.Acc[0]});
+    //         if(data)
+    //             this.setState({doctorPassbook: data[0], doctorBalance: data[1]});
+            
+    //         console.log(this.state.doctorPassbook);
+    //         console.log(this.state.doctorBalance);
+    //     }
+
+    //     catch(e){
+    //         console.log(e);
+    //     }
+    // }
     
     componentWillMount() {
         
@@ -88,6 +106,7 @@ class DisplayPatient extends Component {
             //uncomment after uncommenting from smart contract and after successful migration
             this.loadDoctorAddedFiles(this.props.patient_address)
             // console.log(this.doctorAddRecord)
+            // this.loadDoctorWallet();
             
     }
 
@@ -99,7 +118,7 @@ class DisplayPatient extends Component {
         let consult = document.getElementById('consultation').value;
         let med = document.getElementById('medicine').value;
         let time_per = document.getElementById('time_period').value;
-        let res = await this.contract.methods.addDoctorOfferedConsultation(this.props.patient_address,consult,med, time_per).send({"from":this.Acc[0]});
+        let res = await this.doctorAddRecord.methods.addDoctorOfferedConsultation(this.props.patient_address,consult,med, time_per).send({"from":this.Acc[0]});
 
         console.log(res);
         if(res)
@@ -169,23 +188,25 @@ class DisplayPatient extends Component {
 
     render() {
         let { patient_address } = this.props;
+        // let { patient_name, patient_age, files, doctorAddedFiles, doctorConsultation, doctorPassbook } = this.state;
         let { patient_name, patient_age, files, doctorAddedFiles, doctorConsultation } = this.state;
 
         
 
         return(
-            <div className='doctorbody' >
+            <div className='container-fluid' >
                 
+                <div className='row'>
                 <Card bordered={true} style={{width:'143%', border:'2px black solid'}}>
-                    <h6>Patient address:</h6>  {patient_address} <br></br>
+                    <h6>Patient Id:</h6>  {patient_address} <br></br>
                     <h6>Patient name:</h6>  {patient_name} <br></br>
                     <h6>Patient age:</h6>  {patient_age}
                 </Card>
+                </div>
 
-
-                <div style={{display:'flex', justifyContent:'space-between', width:'142%', paddingBottom:'30px'}}>
+                <div className='row mt-3'>
                     
-                    <div style={{display:'flex', flexDirection:'column', width:'35%', border:'1px black solid'}}>
+                    <div className='col-4 mt-2' style={{border:'3px solid black'}}>
                         <h5>Patient Files</h5>
                         <div style={{height: "310px", overflowY: "auto",width:'100%',paddingRight:'15px'}}>
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
@@ -200,29 +221,29 @@ class DisplayPatient extends Component {
                     </div>
 
 
-                    <div style={{display:'flex', flexDirection:'column', width:'37%', border:'1px black solid'}}>
-                        <h5>Doctor Consultation </h5>
+                    <div className='col-4 mt-2' style={{border:'3px solid black'}}>
+                        <h5>Doctor Consultations </h5>
                         <div style={{ overflowY: "auto",width:'100%', height:'310px'}}>
                         
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
                                 { 
-                                            doctorConsultation.map((doc,i) => {
-                                                let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
-                                                let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
-                                                let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
-                                                let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
-                                                
-                                                let consultProps = {doctor_id,consultation_advice, medicine, time_period};
+                                    doctorConsultation.map((doc,i) => {
+                                        let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
+                                        let consultation_advice = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][1]:null;
+                                        let medicine = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][2]:null;
+                                        let time_period =this.state.doctorConsultation[i]?this.state.doctorConsultation[i][3]:null;
+                                        
+                                        let consultProps = {doctor_id,consultation_advice, medicine, time_period};
 
-                                                return <DisplayConsultation that={this} props={consultProps} />
-                                            })
+                                        return <DisplayConsultation that={this} props={consultProps} />
+                                    })
                                 }
                     
                             </Collapse>
                         </div>
                     </div>
 
-                    <div style={{display:'flex', flexDirection:'column', width:'35%', border:'1px black solid'}}>
+                    <div className='col-4 mt-2' style={{border:'3px solid black'}}>
                         <h5>Doctor Added Files</h5>
                         <div style={{height: "310px", overflowY: "auto",width:'100%',paddingRight:'15px'}}>
                             <Collapse className='folderTab' defaultActiveKey={['1']}>
@@ -237,10 +258,10 @@ class DisplayPatient extends Component {
                     </div>
                 </div>
                 
-                <div style={{display:'flex', justifyContent:'flex-start', width:'142%'}}>
+                <div className='row mt-3'>
                     
                     
-                    <div style={{width:'33%', height:'auto',paddingLeft:'20px', border:'1px black solid'}}>
+                    <div className='col-6 mt-3' style={{border:'3px solid black'}}>
                             <h6>Add consultation</h6>
                             <div>
                             <form onSubmit={this.addConsultation}>
@@ -263,7 +284,7 @@ class DisplayPatient extends Component {
                             </div>
                         </div>
                     
-                    <div style={{width:'34%', height:'auto',paddingLeft:'20px', border:'1px black solid'}}>
+                    <div className='col-6 mt-3' style={{border:'3px solid black'}}>
                         <h5>Upload File/Report</h5>
                         <div>
                         <Card bordered={true}>
@@ -275,6 +296,27 @@ class DisplayPatient extends Component {
                         </div>
                     </div>
                 </div>
+                {/* <div>
+                    <h6>Doctor Balance = {this.state.doctorBalance}</h6>
+                    <div style={{ overflowY: "auto",width:'100%', height:'310px'}}>
+                        
+                            <Collapse className='folderTab' defaultActiveKey={['1']}>
+                                { 
+                                    doctorPassbook.map((doc,i) => {
+                                        let to = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][0]:null;
+                                        let from = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][1]:null;
+                                        let amount = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][2]:null;
+                                        let context =this.state.doctorPassbook[i]?this.state.doctorPassbook[i][3]:null;
+                                        let isDoctor = true;
+                                        let paymentProps = {to, from, amount, context, isDoctor};
+
+                                        return <DisplayPayment that={this} props={paymentProps} />
+                                    })
+                                }
+                    
+                            </Collapse>
+                        </div>
+                </div> */}
             </div>
 
 

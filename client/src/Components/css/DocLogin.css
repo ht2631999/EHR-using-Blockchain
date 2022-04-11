@@ -1,12 +1,14 @@
 .dlbody{
     /* background-color: rgb(255, 0, 106); */
-    background-image: url(../Images/doctors.jpg);
+    /* background-image: url(../Images/doctors.jpg); */
     /* Full height */
     height: 100%;
 
     /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #ecebedf5;
+
     background-size: cover;
     padding-bottom: 30%;
     width: 100%;

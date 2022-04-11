@@ -100,7 +100,7 @@ class Patient extends Component {
     }
 
     async loadDoctorConsultation(){
-        const data = await this.contract.methods.getDoctorConsultationForPatient().call({from:this.accounts[0]});
+        const data = await this.doctorAddRecord.methods.getDoctorConsultationForPatient().call({from:this.accounts[0]});
         
         if(data)
             this.setState({doctorConsultation:data});
@@ -199,8 +199,8 @@ class Patient extends Component {
         let { name, age, files, doctor_list, doctorConsultation, doctorAddedFiles } = this.state;
         
         return (
-            <div className='container-fluid' >
-                <div style={{border: '1px solid black'}}>
+            <div className='container' >
+                <div className='mt-3' style={{border: '1px solid black'}}>
                     
                         <Card bordered={true} >
                             <div className='userDetails'  >
@@ -214,8 +214,8 @@ class Patient extends Component {
     
                 </div>
 
-                <div className='row' style={{paddingTop:'25px'}}>    
-                    <div className='col' style={{border: '1px solid black'}}>
+                <div className='row mt-3' style={{paddingTop:'25px'}}>    
+                    <div className='col mt-2' style={{border: '1px solid black'}}>
                     <h6>Grant Access</h6>
                         <Card bordered={true}>
                             <div style={flexStyle}>
@@ -227,7 +227,7 @@ class Patient extends Component {
                         </Card>
                     </div>
 
-                    <div className='col' style={{border: '1px solid black'}}>
+                    <div className='col mt-2' style={{border: '1px solid black'}}>
                         <h6>Revoke Access</h6>
                         <Card bordered={true}>
                             <div style={flexStyle}>
@@ -242,9 +242,9 @@ class Patient extends Component {
                     
                 </div>
                 
-                <div className='row' style={{paddingTop:'25px'}}>
+                <div className='row mt-3' style={{paddingTop:'25px'}}>
 
-                    <div className='col-md' style={{height: "310px",border: '1px solid black'}}>
+                    <div className='col-6 mt-2' style={{height: "310px",border: '1px solid black'}}>
                     <h6>Upload File</h6>
                         <Card bordered={true}>
                             <form onSubmit={this.uploadFile.bind(this)}>
@@ -255,7 +255,7 @@ class Patient extends Component {
                         </Card>
                     </div>
 
-                    <div className='col-md' style={{height: "310px", width:'25%', overflow:'auto',border: '1px solid black'}}>
+                    <div className='col-6 mt-2' style={{height: "310px", width:'25%', overflow:'auto',border: '1px solid black'}}>
                         <Collapse className='folderTab' defaultActiveKey={['1']}>
                         <h6>Your Files</h6>
                             { 
@@ -269,8 +269,8 @@ class Patient extends Component {
                 
                 </div>
 
-                <div className='row' style={{paddingTop:'25px'}}>
-                    <div className='col' style={{height: "310px",overflow:'scroll',border: '1px solid black'}}>
+                <div className='row mt-3' style={{paddingTop:'25px'}}>
+                    <div className='col mt-2' style={{height: "310px",overflow:'scroll',border: '1px solid black'}}>
                         <Collapse>
                             <h6 style={{align:'centre'}}>Doctor List</h6>
                                 { 
@@ -280,9 +280,9 @@ class Patient extends Component {
                                 }
                         </Collapse>
                     </div>
-                    <div className='col' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
+                    <div className='col mt-2' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
                     <Collapse className='folderTab' defaultActiveKey={['1']}>
-                        <h6>Doctor Consultation </h6>
+                        <h6>Doctor Consultations </h6>
                                 { 
                                     doctorConsultation.map((doc,i) => {
                                         let doctor_id = this.state.doctorConsultation[i]?this.state.doctorConsultation[i][0]:null;
@@ -298,10 +298,10 @@ class Patient extends Component {
                         </Collapse>
                     </div>
 
-                    <div className='col' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
+                    <div className='col mt-2' style={{height: "310px", overflow:'auto',border: '1px solid black'}}>
                         
                         <Collapse className='folderTab' defaultActiveKey={['1']}>
-                        <h5>Doctor Added Files</h5>
+                        <h6>Doctor Added Files</h6>
                                 { 
                                     doctorAddedFiles.map((fhash, i) => {
                                         
