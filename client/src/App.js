@@ -11,6 +11,7 @@ import Patient from "./Components/Patient";
 import NavbarComp from "./Components/NavbarComp";
 import Hospital from "./Components/Hospital";
 import Owner from "./Components/Owner";
+import InsuranceComp from "./Components/InsuranceComp";
 // import background from "./Components/Images/doctors.jpg"
 
 
@@ -70,29 +71,15 @@ class App extends Component {
     return (
       <div className="App">
       
-        
         <NavbarComp isLogged={this.state.loggedAcc} onlogout={()=>this.setState({loggedAcc:null,loggedas:null})}/>
-         
-        {/* <h1>Good to Go!</h1> */}
-        {/* <p>Your Truffle Box is installed and ready.</p> */}
-        
-        {/* <form onSubmit={this.handleSubmit}>
-          <div>
-              Value of Variable is {this.state.newValue}  
-          </div>  
-          <input type="text" value={this.state.newValue} onChange={this.handleChange.bind(this)}></input>
-          <input type="submit" value="Submit"/>
-          
-          </form> */}
-          
-          {
-            !this.state.loggedAcc ? <DocLogin onlogin={(loggedAcc,loggedas)=>this.setState({loggedAcc,loggedas})} state = {this.state}/>
-            :this.state.loggedas===0?<Doctor contract={this.state.contract} Acc={this.state.accounts}/>
-            :this.state.loggedas===1?<Patient contract={this.state.contract} Acc={this.state.accounts}/>
-            :this.state.loggedas===2?<Hospital contract ={this.state.contract} Acc={this.state.accounts}/>
-            :<Owner contract ={this.state.contract} Acc={this.state.accounts}/>
-          }
-               
+        {
+          !this.state.loggedAcc ? <DocLogin onlogin={(loggedAcc,loggedas)=>this.setState({loggedAcc,loggedas})} state = {this.state}/>
+          :this.state.loggedas===0?<Doctor contract={this.state.contract} Acc={this.state.accounts}/>
+          :this.state.loggedas===1?<Patient contract={this.state.contract} Acc={this.state.accounts}/>
+          :this.state.loggedas===2?<Hospital contract ={this.state.contract} Acc={this.state.accounts}/>
+          :this.state.loggedas===3?<Owner contract ={this.state.contract} Acc={this.state.accounts}/>
+          :<InsuranceComp contract ={this.state.contract} Acc={this.state.accounts}/>
+        }
                
       </div>
     );

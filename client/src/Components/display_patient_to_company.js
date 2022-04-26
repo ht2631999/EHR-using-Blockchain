@@ -9,7 +9,7 @@ import DisplayConsultation from "./common/displayConsultation";
 import DisplayPayment from './common/displayPayment';
 import './css/display_patient.css'
 
-class DisplayPatient extends Component {
+class DisplayPatientToCompany extends Component {
 
     constructor(props){
         super(props); 
@@ -38,7 +38,7 @@ class DisplayPatient extends Component {
     contract = this.props.contract[0];
     doctorAddRecord = this.props.contract[1];
 
-    Acc= this.props.Acc;
+    Acc= this.props.accounts;
 
     async loadcontract(){
         var web3 = await getWeb3();
@@ -256,67 +256,7 @@ class DisplayPatient extends Component {
                             </Collapse>
                         </div>
                     </div>
-                </div>
-                
-                <div className='row mt-3'>
-                    
-                    
-                    <div className='col-6 mt-3' style={{border:'3px solid black'}}>
-                            <h6>Add consultation</h6>
-                            <div>
-                            <form onSubmit={this.addConsultation}>
-                                <table>
-                                    
-                                    <tr>
-                                        <td><input type='text' id='consultation' placeholder='consultation'/></td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td><input type="text" id='medicine' placeholder='medicine / Reports'/></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><input type="text" id='time_period' placeholder='time period / NA'/></td>
-                                    </tr>
-                                    <button className='button-12' type="submit" value="submit">submit</button>
-                                </table>
-                            </form>
-                            </div>
-                        </div>
-                    
-                    <div className='col-6 mt-3' style={{border:'3px solid black'}}>
-                        <h5>Upload File/Report</h5>
-                        <div>
-                        <Card bordered={true}>
-                                <form onSubmit={this.uploadFile}>
-                                <input type="file" onChange={this.getFile}></input>
-                                <input type="submit"></input>
-                                </form>
-                        </Card>
-                        </div>
-                    </div>
-                </div>
-                {/* <div>
-                    <h6>Doctor Balance = {this.state.doctorBalance}</h6>
-                    <div style={{ overflowY: "auto",width:'100%', height:'310px'}}>
-                        
-                            <Collapse className='folderTab' defaultActiveKey={['1']}>
-                                { 
-                                    doctorPassbook.map((doc,i) => {
-                                        let to = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][0]:null;
-                                        let from = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][1]:null;
-                                        let amount = this.state.doctorPassbook[i]?this.state.doctorPassbook[i][2]:null;
-                                        let context =this.state.doctorPassbook[i]?this.state.doctorPassbook[i][3]:null;
-                                        let isDoctor = true;
-                                        let paymentProps = {to, from, amount, context, isDoctor};
-
-                                        return <DisplayPayment that={this} props={paymentProps} />
-                                    })
-                                }
-                    
-                            </Collapse>
-                        </div>
-                </div> */}
+                </div>             
             </div>
 
 
@@ -327,4 +267,4 @@ class DisplayPatient extends Component {
 
 
 
-export default DisplayPatient;
+export default DisplayPatientToCompany;

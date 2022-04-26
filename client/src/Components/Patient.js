@@ -4,6 +4,7 @@ import healthRecord from "../contracts/DoctorAddRecord.json"
 import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
+import {Button} from 'react-bootstrap';
 import './css/patient.css'
 
 import ipfs from "./ipfs-util"
@@ -15,6 +16,8 @@ class Patient extends Component {
         super(props);
         this.uploadFile = this.uploadFile.bind(this);
         this.getFile = this.getFile.bind(this);
+        // this.addPatientToInsuranceComp = this.addPatientToInsuranceComp.bind(this);
+
     }
 
     contract =this.props.contract['OPT'];
@@ -195,6 +198,20 @@ class Patient extends Component {
         }
     }
 
+    
+    // async addPatientToInsuranceComp(event){
+    //     event.preventDefault();
+    //     let addr1= document.getElementById('added_patient').value;
+    //     let addr2= document.getElementById('added_to_company').value;
+    //     try{
+    //         let result = await this.contract.methods.addPatientToInsuranceComp(addr2,addr1).send({"from":this.accounts[0]});
+    //         console.log(result);
+    //     }
+    //     catch(e){
+    //         console.log(e);
+    //     }
+    // }
+
     render() {
         let { name, age, files, doctor_list, doctorConsultation, doctorAddedFiles } = this.state;
         
@@ -275,7 +292,7 @@ class Patient extends Component {
                             <h6 style={{align:'centre'}}>Doctor List</h6>
                                 { 
                                     doctor_list.map((doctor) => {
-                                        return <Tag>{doctor}</Tag>
+                                        return <Tag>{doctor} <br></br></Tag>
                                     }) 
                                 }
                         </Collapse>
@@ -311,7 +328,23 @@ class Patient extends Component {
                         </Collapse>
                     </div> 
                 </div>  
-
+{/*                 
+                <div className='row mt-2'>
+                    <div className='col mt-2' style={{border: '1px solid black'}}>
+                        <h4 style={{align:'centre'}}>Register To Insurance Comp.</h4>
+                        <div>
+                            <form onSubmit={this.addPatientToInsuranceComp}>
+                                <div className='label mt-2'>Patient Address:</div>
+                                <input type="text" id="added_patient" placeholder='Patient address'></input>
+                                <br></br>
+                                <div className='label mt-2'>Company Address:</div>
+                                <input type="text" id="added_to_company" placeholder='Company Address'></input>
+                                <br></br>
+                                <Button variant="dark" className="button" type="submit">Add</Button>
+                            </form>
+                        </div>
+                    </div>
+                </div> */}
             </div>
                 
 

@@ -10,5 +10,19 @@ module.exports = {
        port: 8546,            // Standard Ethereum port (default: none)
        network_id: "*",       // Any network (default: none)
       }
+  },
+  
+  compilers: {
+    solc: {
+      version: '^0.5.0',
+      settings: {
+        evmVersion: 'byzantium', // Default: "petersburg"
+        optimizer: {
+          enabled: true,
+          runs: 1500
+        }
+      }
+    }
   }
+  
 };

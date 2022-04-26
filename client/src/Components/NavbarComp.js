@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Form,Button,Navbar,Nav} from 'react-bootstrap';
+import { Form,Button,Navbar, Nav} from 'react-bootstrap';
 
 
 class NavbarComp extends Component{
@@ -12,7 +12,7 @@ class NavbarComp extends Component{
           
             <div bg="dark">
                 
-              <Navbar bg="primary" variant="dark">
+              <Navbar bg="dark" variant="dark">
                 <Navbar.Brand href="#home">EHR using blockchain</Navbar.Brand>
                 <Nav className="mr-auto">
                   {}

@@ -1,20 +1,18 @@
 pragma solidity >=0.4.21 <0.7.0;
 pragma experimental ABIEncoderV2;
-import "./DoctorAddRecord.sol";
+
 
 contract optimized_healthCare {
-  
-  DoctorAddRecord public doctorAddRecord;
 
   address private owner;
   mapping (address => doctor) private doctors;
   
   mapping (address => patient) private patients; //mapping patients to their addresses
-  mapping (address => mapping (address => uint)) private patientToDoctor; //patients and list of doctors allowed access to
-  mapping (address => mapping (bytes32 => uint)) private patientToFile; //files mapped to patients
+  mapping (address => mapping (address => uint16)) private patientToDoctor; //patients and list of doctors allowed access to
+  mapping (address => mapping (bytes32 => uint16)) private patientToFile; //files mapped to patients
   mapping (address => files[]) private patientFiles;
   mapping (address => hospital) private hospitals;
-
+  mapping (address => insuranceComp) insuranceCompanies;
   
   
   //structure of patient file
@@ -31,6 +29,14 @@ contract optimized_healthCare {
     string location;
   }
   
+  //structure of Insurance companies
+  struct insuranceComp{
+    address id;  
+    string name;
+    mapping (address => uint8) regPatientsMapping;
+    address[] regPatients;
+  }
+  
 
   //structure of patient info
   struct patient {
@@ -39,8 +45,6 @@ contract optimized_healthCare {
     address id;
     string gender;
     string contact_info;
-
-    string[] allergies;
 
     bytes32[] files;// hashes of file that belong to this user for display purpose
     address[] doctor_list;
@@ -51,7 +55,7 @@ contract optimized_healthCare {
   struct doctor {
       string name;
       address id;
-      string doc_address;
+      
       string contact;
       string specialization;
       address[] patient_list;
@@ -77,13 +81,7 @@ contract optimized_healthCare {
     _;
   }
 
-  //verify hospital
-  modifier checkHospital(address id) {
-    hospital memory h = hospitals[id];
-    require(h.id > address(0x0));//check if patient exist
-    _;
-  }
-
+ 
   //owner verification modifier
   modifier onlyOwner() {
     require(msg.sender == owner);
@@ -113,7 +111,7 @@ contract optimized_healthCare {
     //Check if the patient already exists by address
     require(!(p.id > address(0x0)));
     //Add patient to blockchain
-    patients[msg.sender] = patient({name:_name, age:_age, id:msg.sender, gender:_gender, contact_info:_contact, allergies:new string[](0), files:new bytes32[](0), doctor_list:new address[](0)});
+    patients[msg.sender] = patient({name:_name, age:_age, id:msg.sender, gender:_gender, contact_info:_contact, files:new bytes32[](0), doctor_list:new address[](0)});
     
 
     emit patientSignUp( msg.sender, "Registered as Patient");
@@ -123,18 +121,18 @@ contract optimized_healthCare {
   //Event to emit when new doctor registers
   event doctorSignUp(address _doctor, string message);
 
-  function signupDoctor(string memory _name, string memory _address, string memory _contact, string memory _specialization) public {
+  function signupDoctor(address _id, string memory _name, string memory _contact, string memory _specialization) public {
 
       //search for doctor on blockchain
-      doctor storage d = doctors[msg.sender];
+      doctor storage d = doctors[_id];
       //check name of doctor
       require(keccak256(abi.encodePacked(_name)) != keccak256(""));
       //check if doctor already exists
       require(!(d.id > address(0x0)));
       //Add the doctor to blockchain
-      doctors[msg.sender] = doctor({name:_name, id:msg.sender, doc_address:_address, contact:_contact, specialization: _specialization, patient_list:new address[](0)});
+      doctors[_id] = doctor({name:_name, id:_id, contact:_contact, specialization: _specialization, patient_list:new address[](0)});
      
-      emit doctorSignUp(msg.sender, "Registered as Doctor");
+      emit doctorSignUp(_id, "Registered as Doctor");
   }
 
 
@@ -147,7 +145,7 @@ contract optimized_healthCare {
       doctor storage d = doctors[doctor_id];
       require(patientToDoctor[msg.sender][doctor_id] < 1);// this means doctor already been access
       
-      uint pos = p.doctor_list.push(doctor_id);// new length of array
+      uint16 pos = (uint16)(p.doctor_list.push(doctor_id));// new length of array
       
       patientToDoctor[msg.sender][doctor_id] = pos;
       d.patient_list.push(msg.sender);
@@ -168,10 +166,10 @@ contract optimized_healthCare {
     patient storage p = patients[msg.sender];
     doctor storage d = doctors[doctor_id];
 
-    uint pdlength= p.doctor_list.length;
-    uint pos=0;
+    uint16 pdlength= (uint16)(p.doctor_list.length);
+    uint16 pos=0;
 
-    for (uint i = 0; i < pdlength; i++) {
+    for (uint16 i = 0; i < pdlength; i++) {
       if(p.doctor_list[i] == doctor_id)
       {
         pos=i;
@@ -186,10 +184,10 @@ contract optimized_healthCare {
 
     p.doctor_list.pop();
 
-    pdlength= d.patient_list.length;
+    pdlength= (uint16)(d.patient_list.length);
     pos=0;
 
-    for (uint i = 0; i < pdlength; i++) {
+    for (uint16 i = 0; i < pdlength; i++) {
       if(d.patient_list[i] == msg.sender)
       {
         pos=i;
@@ -222,16 +220,16 @@ contract optimized_healthCare {
 
 
 
-  function getPatientInfo() public view checkPatient(msg.sender) returns(string memory,address, uint8, bytes32[] memory , address[] memory) {
+  function getPatientInfo() public view checkPatient(msg.sender) returns(string memory,address, uint8, bytes32[] memory , address[] memory, string memory, string memory) {
       patient memory p = patients[msg.sender];
-      return (p.name,p.id, p.age, p.files, p.doctor_list);
+      return (p.name, p.id, p.age, p.files, p.doctor_list, p.gender, p.contact_info );
   }
 
 
 
-  function getDoctorInfo() public view checkDoctor(msg.sender) returns(string memory,address, address[] memory) {
+  function getDoctorInfo() public view checkDoctor(msg.sender) returns(string memory, address, address[] memory, string memory, string memory) {
       doctor memory d = doctors[msg.sender];
-      return (d.name,d.id, d.patient_list);
+      return (d.name, d.id, d.patient_list, d.contact, d.specialization);
   }
   
   
@@ -241,7 +239,7 @@ contract optimized_healthCare {
       return (p.name, p.age, p.id, patientFiles[pat]);
     }
 
-  function getHospitalInfo() public view checkHospital(msg.sender) returns(address, string memory, string memory)
+  function getHospitalInfo() public view returns(address, string memory, string memory)
   {
     hospital memory h = hospitals[msg.sender];
     return (h.id, h.name, h.location);
@@ -260,17 +258,34 @@ contract optimized_healthCare {
     {
       require(patientToDoctor[_patient][_user] < 1);// this means doctor already been access
       
-      uint pos = p.doctor_list.push(_user);// new length of array
+      uint16 pos = (uint16)(p.doctor_list.push(_user));// new length of array
       
       patientToDoctor[_patient][_user] = pos;
       d.patient_list.push(_patient);    
     }
   }
 
-  function addHospital(address _id, string memory _name, string memory _location) public{
+  function addHospital(address _id, string memory _name, string memory _location) public onlyOwner(){
     hospital memory h = hospitals[_id];
     require(!(h.id > address(0x0)));
     hospitals[_id] = hospital({id:_id, name:_name, location:_location});
   }
  
+  function regInsuranceComp(address _id, string memory _name) public onlyOwner() {
+    insuranceComp memory i= insuranceCompanies[_id];
+    require(!(i.id> address(0x0)));
+    insuranceCompanies[_id] = insuranceComp({id:_id, name:_name, regPatients: new address[](0)});
+  } 
+
+  function getInsuranceCompInfo() public view returns(address,string memory, address[] memory){
+    insuranceComp memory i= insuranceCompanies[msg.sender];
+    return(i.id,i.name,i.regPatients);
+  }
+
+  function addPatientToInsuranceComp(address _insuranceComp, address _pat) public{
+    insuranceComp storage i = insuranceCompanies[_insuranceComp];
+    require(i.regPatientsMapping[_pat]<1);
+    uint8 pos=(uint8)(i.regPatients.push(_pat));
+    i.regPatientsMapping[_pat]=pos;
+  }
 }
