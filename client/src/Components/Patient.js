@@ -4,7 +4,6 @@ import healthRecord from "../contracts/DoctorAddRecord.json"
 import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
-import {Button} from 'react-bootstrap';
 import './css/patient.css'
 
 import ipfs from "./ipfs-util"
