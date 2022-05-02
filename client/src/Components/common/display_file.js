@@ -12,10 +12,6 @@ class display_file extends Component{
         <div>
             <Card title={fhash[0]} bordered={true}>
                 <button className='button-81' type="primary" onClick={that.showFile.bind(that, fhash, true)}><Icon type="file" />Show File</button>
-                {/* <PopUp showPopup={that.state.showPopup[i]} closePopup={that.showFile.bind(that, fhash, false)}>
-                    Downloading File
-                    <img src={diplayImage} alt='Patient file'/>
-                </PopUp> */}
             </Card>
         </div>
     );

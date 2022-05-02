@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {   Input,  message, Tag, Card, Collapse } from 'antd';
+import { Card } from 'antd';
 import {Button} from 'react-bootstrap';
 
 // import healthRecord from "../contracts/DoctorAddRecord.json"
