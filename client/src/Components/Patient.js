@@ -182,7 +182,6 @@ class Patient extends Component {
         reader.readAsArrayBuffer(file);
         reader.onloadend =() =>{
             this.setState({buffer:Buffer(reader.result),file});
-            
             console.log('buffer',file);
         }
     } 
