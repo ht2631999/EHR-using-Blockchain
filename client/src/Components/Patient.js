@@ -25,7 +25,7 @@ class Patient extends Component {
 
     state = {
         name: "",
-        age: 0,
+        DOB: "",
         files: [],
         doctor_list: [],
         filesInfo:[],
@@ -37,7 +37,7 @@ class Patient extends Component {
         buffer:null,
         doctorConsultation:[],
         doctorAddedFiles:[],
-        
+        contact_info:"",
         file:null
     }
 
@@ -57,19 +57,6 @@ class Patient extends Component {
 
 
 
-    updateFileHash = async (name,type,ipfshash) => {
-        
-       //sending transaction and storing result to state variables
-	     
-        let res = await this.contract.methods.addUserFiles(name,type,ipfshash).send({"from":this.accounts[0]});
-            console.log(res);
-        if(res)
-            console.log("file upload successful");
-        else
-            console.log("file upload unsuccessful");
-        
-        
-    }
     
       
     componentDidMount(){ 
@@ -89,7 +76,7 @@ class Patient extends Component {
     async loadPatient (){
         let res = await this.contract.methods.getPatientInfo().call({from :this.accounts[0]});
 
-        this.setState({name:res[0],age:res[2],files:res[3],doctor_list:res[4]},
+        this.setState({name:res[0],DOB:res[2],files:res[3],doctor_list:res[4], contact_info:res[6]},
         () => {
             this.loadFiles();
             this.loadcontract();
@@ -160,6 +147,18 @@ class Patient extends Component {
             this.setState({[type]:e.target.value});
     }
 
+    
+    updateFileHash = async (name,type,ipfshash) => {
+        
+        //sending transaction and storing result to state variables
+          
+         let res = await this.contract.methods.addUserFiles(name,type,ipfshash).send({"from":this.accounts[0]});
+             console.log(res);
+         if(res)
+             console.log("file upload successful");
+         else
+             console.log("file upload unsuccessful");
+     }
   
     async uploadFile(event)
     {
@@ -212,7 +211,7 @@ class Patient extends Component {
     // }
 
     render() {
-        let { name, age, files, doctor_list, doctorConsultation, doctorAddedFiles } = this.state;
+        let { name, DOB, files, doctor_list, doctorConsultation, doctorAddedFiles, contact_info } = this.state;
         
         return (
             <div className='container' >
@@ -223,8 +222,9 @@ class Patient extends Component {
                                     <h4>Patient Details</h4>
                                     <span> <b>Name:</b> {name} </span> 
                                     <br></br>
-                                    <span> <b>Age:</b> {age}</span>
-                                
+                                    <span> <b>DOB:</b> {DOB}</span>
+                                    <br></br>
+                                    <span> <b>Contact Info:</b> {contact_info}</span>
                             </div>
                         </Card>
     

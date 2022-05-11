@@ -13,8 +13,20 @@ contract optimized_healthCare {
   mapping (address => files[]) private patientFiles;
   mapping (address => hospital) private hospitals;
   mapping (address => insuranceComp) insuranceCompanies;
-  
-  
+  // mapping (address => doctorAddedFiles[]) private doctorAddedPatientFiles;
+  // mapping (address => doctorOfferedConsultation[]) private doctorOfferedConsultationList;
+  mapping (address => adhaar) patient_adhaar_info;
+  mapping (address => adhaar) doctor_adhaar_info;
+
+
+  struct adhaar{
+    address id;
+    uint64 adhaar_number;
+    string name;
+    string DOB;
+    uint24 pincode;
+  }
+
   //structure of patient file
   struct files{
       string file_name;
@@ -41,7 +53,8 @@ contract optimized_healthCare {
   //structure of patient info
   struct patient {
     string name;
-    uint8 age;
+    string DOB;
+    uint64 adhaar_number;
     address id;
     string gender;
     string contact_info;
@@ -55,12 +68,11 @@ contract optimized_healthCare {
   struct doctor {
       string name;
       address id;
-      
+      uint64 adhaar_number;
       string contact;
       string specialization;
       address[] patient_list;
   }
-  
 
   //setting the owner
   constructor() public {
@@ -101,17 +113,17 @@ contract optimized_healthCare {
   //Event to emit when new patient registers
   event patientSignUp( address _patient, string message);
 
-  function signupPatient(string memory _name, uint8 _age, string memory _contact, string memory _gender) public {
+  function signupPatient(string memory _name, string memory _contact, string memory _gender) public {
 
     //search for patient on blockchain by address 
     patient storage p = patients[msg.sender];
-    //check input name and age
-    require(keccak256(abi.encodePacked(_name)) != keccak256(""));
-    require((_age > 0) && (_age < 100));
+    adhaar memory a = patient_adhaar_info[msg.sender];
     //Check if the patient already exists by address
     require(!(p.id > address(0x0)));
     //Add patient to blockchain
-    patients[msg.sender] = patient({name:_name, age:_age, id:msg.sender, gender:_gender, contact_info:_contact, files:new bytes32[](0), doctor_list:new address[](0)});
+    require(a.adhaar_number > 0);
+
+    patients[msg.sender] = patient({name:_name, DOB: a.DOB, id:msg.sender, adhaar_number: a.adhaar_number, gender:_gender, contact_info:_contact, files:new bytes32[](0), doctor_list:new address[](0)});
     
 
     emit patientSignUp( msg.sender, "Registered as Patient");
@@ -125,12 +137,15 @@ contract optimized_healthCare {
 
       //search for doctor on blockchain
       doctor storage d = doctors[_id];
+      adhaar memory a = doctor_adhaar_info[_id];
       //check name of doctor
       require(keccak256(abi.encodePacked(_name)) != keccak256(""));
       //check if doctor already exists
       require(!(d.id > address(0x0)));
+
+      require(a.adhaar_number > 0);
       //Add the doctor to blockchain
-      doctors[_id] = doctor({name:_name, id:_id, contact:_contact, specialization: _specialization, patient_list:new address[](0)});
+      doctors[_id] = doctor({name:_name, id:_id, contact:_contact, adhaar_number: a.adhaar_number, specialization: _specialization, patient_list:new address[](0)});
      
       emit doctorSignUp(_id, "Registered as Doctor");
   }
@@ -220,23 +235,49 @@ contract optimized_healthCare {
 
 
 
-  function getPatientInfo() public view checkPatient(msg.sender) returns(string memory,address, uint8, bytes32[] memory , address[] memory, string memory, string memory) {
-      patient memory p = patients[msg.sender];
-      return (p.name, p.id, p.age, p.files, p.doctor_list, p.gender, p.contact_info );
+  function getPatientInfo() public view checkPatient(msg.sender) returns(string memory,address, string memory, bytes32[] memory , address[] memory, string memory, string memory) {
+      
+    patient memory p = patients[msg.sender];
+    return (p.name, p.id, p.DOB, p.files, p.doctor_list, p.gender, p.contact_info );
   }
 
 
 
   function getDoctorInfo() public view checkDoctor(msg.sender) returns(string memory, address, address[] memory, string memory, string memory) {
       doctor memory d = doctors[msg.sender];
+
       return (d.name, d.id, d.patient_list, d.contact, d.specialization);
   }
   
+  function checkDoctorInfo(uint64 _adhaar_number) public view returns(bool, address) {
+    
+    doctor memory d = doctors[msg.sender];
+    adhaar memory a = doctor_adhaar_info[msg.sender];
+    if (a.adhaar_number == _adhaar_number){
+      return (true, d.id);
+    }
+
+    else 
+      return (false, d.id);
+
+  }
+
+  function checkPatientInfo(uint64 _adhaar_number) public view returns(bool, address) {
+    patient memory p = patients[msg.sender];
+    adhaar memory a = patient_adhaar_info[msg.sender];
+    if (a.adhaar_number == _adhaar_number){
+      return (true,p.id);
+    }
+
+    else 
+      return (false,p.id);
+
+  }
   
   
-  function getPatientInfoForDoctor(address pat) public view returns(string memory, uint8, address, files[] memory){
+  function getPatientInfoForDoctor(address pat) public view returns(string memory, string memory, address, files[] memory){
       patient memory p = patients[pat];
-      return (p.name, p.age, p.id, patientFiles[pat]);
+      return (p.name, p.DOB, p.id, patientFiles[pat]);
     }
 
   function getHospitalInfo() public view returns(address, string memory, string memory)
@@ -288,4 +329,19 @@ contract optimized_healthCare {
     uint8 pos=(uint8)(i.regPatients.push(_pat));
     i.regPatientsMapping[_pat]=pos;
   }
+
+
+
+  function addDoctorAdhaarInfo(address _doc, string memory _name, string memory _DOB, uint24 _pincode, uint64 _adhaar_number) public {
+    adhaar memory a = doctor_adhaar_info[_doc];
+    require(a.adhaar_number == 0);
+    doctor_adhaar_info[_doc] = adhaar({id:_doc, pincode: _pincode, name: _name, DOB: _DOB, adhaar_number: _adhaar_number});
+  }
+
+  function addPatientAdhaarInfo(address _pat, string memory _name, string memory _DOB, uint24 _pincode, uint64 _adhaar_number) public {
+    adhaar memory a = patient_adhaar_info[_pat];
+    require(a.adhaar_number == 0);
+    patient_adhaar_info[_pat] = adhaar({id:_pat, pincode: _pincode, name: _name, DOB: _DOB, adhaar_number: _adhaar_number});
+  }
+  
 }

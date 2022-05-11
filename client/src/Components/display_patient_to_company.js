@@ -6,7 +6,7 @@ import healthRecord from "../contracts/DoctorAddRecord.json"
 import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
-import DisplayPayment from './common/displayPayment';
+// import DisplayPayment from './common/displayPayment';
 import './css/display_patient.css'
 
 class DisplayPatientToCompany extends Component {
@@ -118,7 +118,7 @@ class DisplayPatientToCompany extends Component {
         let consult = document.getElementById('consultation').value;
         let med = document.getElementById('medicine').value;
         let time_per = document.getElementById('time_period').value;
-        let res = await this.doctorAddRecord.methods.addDoctorOfferedConsultation(this.props.patient_address,consult,med, time_per).send({"from":this.Acc[0]});
+        let res = await this.contract.methods.addDoctorOfferedConsultation(this.props.patient_address,consult,med, time_per).send({"from":this.Acc[0]});
 
         console.log(res);
         if(res)
@@ -131,7 +131,7 @@ class DisplayPatientToCompany extends Component {
 
         //sending transaction and storing result to state variables
         try{
-         let res = await this.doctorAddRecord.methods.doctorAddFiles(this.props.patient_address ,name,type,ipfshash).send({"from":this.Acc[0]});
+         let res = await this.contract.methods.doctorAddFiles(this.props.patient_address ,name,type,ipfshash).send({"from":this.Acc[0]});
              console.log(res);
          if(res)
              console.log("file upload successful");

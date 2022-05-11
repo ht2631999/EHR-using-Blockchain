@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import "./css/DocLogin.css";
 
 class DocLogin extends Component {
-  state = { textvalue: "", formNum: false, age: 0 };
+  state = { textvalue: "", formNum: false, age: 0, pat_reg_login:0 };
   cont = this.props.state.contract;
   Acc = this.props.state.accounts;
 
@@ -14,12 +14,16 @@ class DocLogin extends Component {
     event.preventDefault(true);
     var result = null
     try {
-      result = await this.cont['OPT'].methods.getDoctorInfo().call({ from: this.Acc[0] });
+      let adhaar_number = document.getElementById('doc_adhaar_number').value;
+      result = await this.cont['OPT'].methods.checkDoctorInfo(adhaar_number).call({ from: this.Acc[0] });
       console.log(result);
-      this.props.onlogin(result[1], 0);
+      if(!result[0])
+        alert('Invalid Credentials. Contact Respective Hospital');
+      else
+        this.props.onlogin(result[1], 0);
     }
     catch (err) {
-      alert('Account Does Not Exist. Kindly Register');
+      alert('Invalid Credentials. ');
     }
 
   }
@@ -28,12 +32,10 @@ class DocLogin extends Component {
   async registerPat(event) {
     event.preventDefault(true);
     let name = document.getElementById('patient_name').value;
-    let age = document.getElementById('patient_age').value;
     let gender = document.getElementById('patient_gender').value;
     let contact_info = document.getElementById('patient_cont').value;
-    await this.cont['OPT'].methods.signupPatient(name, age, contact_info, gender).send({ from: this.Acc[0] });
+    await this.cont['OPT'].methods.signupPatient(name, contact_info, gender).send({ from: this.Acc[0] });
     console.log(name);
-    console.log(age);
     console.log(gender);
     console.log(contact_info);
   }
@@ -44,13 +46,17 @@ class DocLogin extends Component {
 
     var result = null;
     try {
-      result = await this.cont['OPT'].methods.getPatientInfo().call({ from: this.Acc[0] });
+      let adhaar_number = document.getElementById('pat_adhaar_number').value;
+      result = await this.cont['OPT'].methods.checkPatientInfo(adhaar_number).call({ from: this.Acc[0] });
       console.log(result);
-      this.props.onlogin(result[1], 1);
+      if(!result[0])
+        alert('Invalid Credentials. Make sure Account Address and Adhaar Number is entered correctly');
+      else
+        this.props.onlogin(result[1], 1);
 
     }
     catch (err) {
-      alert('Account Does Not Exist. Kindly Register');
+      alert('Invalid Credentials. Make sure Account Address and Adhaar Number is entered correctly');
     }
 
   }
@@ -100,6 +106,15 @@ class DocLogin extends Component {
       alert('You are not registered by the owner')
     }
   }
+
+  patientLoginForm(){
+    this.setState({pat_reg_login:1});
+  }
+  
+  patientRegisterForm(){
+    this.setState({pat_reg_login:0});
+  }
+
   render() {
     this.checkDoc = this.checkDoc.bind(this);
     this.registerPat = this.registerPat.bind(this);
@@ -107,6 +122,8 @@ class DocLogin extends Component {
     this.checkHospital = this.checkHospital.bind(this);
     this.checkOwner = this.checkOwner.bind(this);
     this.checkInsuranceComp = this.checkInsuranceComp.bind(this);
+    this.patientLoginForm = this.patientLoginForm.bind(this);
+    this.patientRegisterForm = this.patientRegisterForm.bind(this);
 
     const ownerForm =
       <div className="container">
@@ -153,8 +170,12 @@ class DocLogin extends Component {
 
         <div style={{ marginLeft: '20px' }}>
           <form>
+            <div className="label mt-2"><b>Adhaar Number</b></div>
+
+            <input type="text" name="adhaar_number" id="doc_adhaar_number" placeholder="Adhaar Number"></input>
             <br></br>
-            <Button variant="dark" className="button" onClick={this.checkDoc}>Login By Address</Button>
+            
+            <Button variant="dark" className="button" onClick={this.checkDoc}>Login As Doctor</Button>
           </form>
         </div>
       </div>;
@@ -162,20 +183,16 @@ class DocLogin extends Component {
     const patForm =
       <div>
         <div><h5 style={{ align: 'centre' }}>Patient</h5></div>
+        <Button className="button" variant="dark" onClick={this.patientRegisterForm}>Register Patient</Button>
+        <Button className="button" variant="dark" onClick={this.patientLoginForm}>Login</Button>
+
+        { this.state.pat_reg_login === 0?
         <div>
           <form onSubmit={this.registerPat}>
-
-
-
             <div className="label mt-2"><b>Enter Name</b></div>
 
             <input type="text" name="name" id="patient_name" placeholder="Name" />
 
-            <br></br>
-
-            <div className="label mt-2"><b>Age</b></div>
-
-            <input type="text" name="age" id="patient_age" placeholder="Age"></input>
             <br></br>
 
             <div className="label mt-2"><b>Address</b></div>
@@ -200,10 +217,21 @@ class DocLogin extends Component {
 
 
             <Button className="button" variant="dark" type="submit">Register Patient</Button>
-            <Button className="button" variant="dark" onClick={this.checkPat.bind(this)}>Login By Address</Button>
-
           </form>
         </div>
+        : 
+
+        <div>
+          <div className="label mt-2"><b>Adhaar Number</b></div>
+
+          <input type="text" name="adhaar_number" id="pat_adhaar_number" placeholder="Adhaar Number"></input>
+          <br></br>
+
+          <Button className="button" variant="dark" onClick={this.checkPat.bind(this)}>Login As Patient</Button>
+
+        </div>
+      }
+        
       </div>;
 
 

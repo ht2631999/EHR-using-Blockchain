@@ -6,7 +6,7 @@ import healthRecord from "../contracts/DoctorAddRecord.json"
 import getWeb3 from '../getWeb3';
 import DisplayFiles from "./common/display_file";
 import DisplayConsultation from "./common/displayConsultation";
-import DisplayPayment from './common/displayPayment';
+// import DisplayPayment from './common/displayPayment';
 import './css/display_patient.css'
 
 class DisplayPatient extends Component {
